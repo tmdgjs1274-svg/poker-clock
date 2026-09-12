@@ -37,7 +37,20 @@ const MAX_BACKUPS = 50;
 function getAuth() {
   const raw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64;
   if (!raw) throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 환경변수가 설정되어 있지 않습니다.');
-  const json = JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
+  const trimmed = raw.trim();
+  let json;
+  try {
+    // base64로 인코딩하는 걸 깜빡하고 JSON 원문을 그대로 넣은 경우도 그냥 동작하게 허용한다.
+    json = trimmed.startsWith('{') ? JSON.parse(trimmed) : JSON.parse(Buffer.from(trimmed, 'base64').toString('utf8'));
+  } catch (e) {
+    throw new Error(
+      'GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 값이 올바른 JSON도, 올바른 base64도 아닙니다. ' +
+        '서비스 계정 JSON 키 파일 전체를 다시 base64로 인코딩해서 넣어주세요.'
+    );
+  }
+  if (!json.client_email || !json.private_key) {
+    throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 안에 client_email 또는 private_key가 없습니다. 파일 전체를 넣었는지 확인해주세요.');
+  }
   return new google.auth.JWT(json.client_email, null, json.private_key, [
     'https://www.googleapis.com/auth/spreadsheets',
   ]);
