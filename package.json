@@ -1,0 +1,19 @@
+{
+  "name": "poker-clock-render-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "구글 앱스스크립트(doGet/doPost /exec)를 대체하는 Render용 중계 서버. DB는 계속 구글시트를 사용하고, 이 서버는 그 사이를 잇는 역할만 합니다.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "googleapis": "^144.0.0"
+  }
+}

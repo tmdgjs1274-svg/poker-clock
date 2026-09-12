@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: poker-clock-render-proxy
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: APP_PASSWORD
+        sync: false
+      - key: SHEET_ID
+        sync: false
+      - key: GOOGLE_SERVICE_ACCOUNT_KEY_BASE64
+        sync: false
