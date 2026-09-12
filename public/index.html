@@ -152,6 +152,16 @@
   }
   .template-menu-add:hover{ background:var(--accent-soft); }
 
+  .import-structure-wrap{ position:relative; }
+  .import-structure-menu{
+    position:absolute; top:calc(100% + 8px); right:0;
+    background:var(--bg); border:1px solid var(--border); border-radius:10px;
+    box-shadow:0 10px 28px rgba(20,40,20,0.12); min-width:240px; max-width:320px; z-index:40; padding:8px;
+  }
+  .import-structure-menu[hidden]{ display:none; }
+  .import-structure-list{ max-height:280px; overflow-y:auto; }
+  .import-structure-empty{ padding:9px 10px; font-size:13px; color:var(--muted); }
+
   .view{ display:none; flex:1; }
   .view.active{ display:flex; flex-direction:column; }
 
@@ -534,9 +544,6 @@
           <button class="more-menu-item layout-item active" data-layout="1">레이아웃1</button>
           <button class="more-menu-item layout-item" data-layout="2">레이아웃2</button>
           <button class="more-menu-item layout-item" data-layout="3">레이아웃3(모바일)</button>
-          <div class="more-menu-divider"></div>
-          <button class="more-menu-item" id="openDbModalBtn">DB 연결</button>
-          <button class="more-menu-item" id="downloadHtmlBtn">HTML 다운</button>
         </div>
       </div>
     </div>
@@ -647,6 +654,12 @@
           </div>
           <button class="tool-link" id="addLevelBtn">📶 레벨 추가</button>
           <button class="tool-link" id="addBreakBtn">☕ 휴식 추가</button>
+          <div class="import-structure-wrap">
+            <button class="tool-link" id="importStructureBtn">📥 다른 템플릿에서 구조 가져오기</button>
+            <div class="import-structure-menu" id="importStructureMenu" hidden>
+              <div class="import-structure-list" id="importStructureList"></div>
+            </div>
+          </div>
         </div>
         <table class="structure-table">
           <thead>
@@ -1223,6 +1236,52 @@
     showToast('휴식을 추가했습니다.');
   }
 
+  /* ---------------- 다른 템플릿에서 블라인드 구조 가져오기 ---------------- */
+  // 현재 편집 중인 템플릿은 그대로 두고, 다른 템플릿의 레벨/휴식/안테 구조만 복사해온다.
+  function renderImportStructureMenu(){
+    const list = document.getElementById('importStructureList');
+    list.innerHTML = '';
+    const others = templates.filter(t=>t.id!==activeTemplateId);
+    if(others.length===0){
+      const empty = document.createElement('div');
+      empty.className = 'import-structure-empty';
+      empty.textContent = '가져올 다른 템플릿이 없습니다.';
+      list.appendChild(empty);
+      return;
+    }
+    others.forEach(t=>{
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'template-menu-item';
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'tmpl-name';
+      nameSpan.textContent = t.name;
+      item.appendChild(nameSpan);
+      item.addEventListener('click', ()=>{
+        if(!confirm('"'+t.name+'" 템플릿의 블라인드 구조를 가져올까요?\n현재 편집 중인 구조(레벨·휴식·안테)는 덮어써집니다.')) return;
+        structure = JSON.parse(JSON.stringify(t.structure));
+        state.anteEnabled = t.anteEnabled !== false;
+        state.currentIndex = 0;
+        state.remainingSec = structure.length ? structure[0].minutes*60 : 0;
+        pauseTimer();
+        document.getElementById('p_useAnte').checked = state.anteEnabled;
+        renderStructureTable();
+        renderClock();
+        scheduleAutoSync();
+        closeImportStructureMenu();
+        showToast('"'+t.name+'" 템플릿의 구조를 가져왔습니다.');
+      });
+      list.appendChild(item);
+    });
+  }
+  function openImportStructureMenu(){
+    renderImportStructureMenu();
+    document.getElementById('importStructureMenu').hidden = false;
+  }
+  function closeImportStructureMenu(){
+    document.getElementById('importStructureMenu').hidden = true;
+  }
+
   /* ---------------- Events ---------------- */
   function switchView(viewId){
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -1324,6 +1383,17 @@
 
   document.getElementById('addLevelBtn').addEventListener('click', addLevel);
   document.getElementById('addBreakBtn').addEventListener('click', addBreak);
+  document.getElementById('importStructureBtn').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const menu = document.getElementById('importStructureMenu');
+    if(menu.hidden) openImportStructureMenu(); else closeImportStructureMenu();
+  });
+  document.addEventListener('click', (e)=>{
+    const menu = document.getElementById('importStructureMenu');
+    if(!menu.hidden && !menu.contains(e.target) && e.target.id!=='importStructureBtn'){
+      closeImportStructureMenu();
+    }
+  });
 
   document.getElementById('p_useAnte').addEventListener('change', (e)=>{
     state.anteEnabled = e.target.checked;
@@ -1412,7 +1482,6 @@
     document.getElementById('dbModalBackdrop').classList.remove('show');
     document.getElementById('dbModal').classList.remove('show');
   }
-  document.getElementById('openDbModalBtn').addEventListener('click', openDbModal);
   document.getElementById('dbModalClose').addEventListener('click', closeDbModal);
   document.getElementById('dbModalBackdrop').addEventListener('click', closeDbModal);
 
@@ -1449,8 +1518,6 @@
     document.getElementById('moreMenu').hidden = true;
     showToast('HTML 파일을 다운로드했습니다.');
   }
-  document.getElementById('downloadHtmlBtn').addEventListener('click', downloadHtmlSnapshot);
-
   document.getElementById('dbUrl').addEventListener('input', e=>{ dbUrl = e.target.value.trim(); scheduleAutoConnect(); });
   document.getElementById('dbPassword').addEventListener('input', e=>{ dbPassword = e.target.value; scheduleAutoConnect(); });
 
