@@ -18,6 +18,10 @@
 import express from 'express';
 import cors from 'cors';
 import { google } from 'googleapis';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.use(cors());
@@ -151,7 +155,11 @@ app.post('/exec', async (req, res) => {
   }
 });
 
-app.get('/', (req, res) => res.send('poker-clock-render-proxy: OK'));
+// 포커 클락 화면(index.html) 자체도 이 서버가 같이 서빙한다.
+// 그래서 이 서비스 주소로 그냥 접속하면 바로 클락 화면이 뜨고,
+// "구글시트 DB 연결" 모달의 URL도 이미 이 서버 자신(/exec)으로 채워져 있다.
+app.use(express.static(path.join(__dirname, 'public')));
+app.get('/healthz', (req, res) => res.send('poker-clock-render-proxy: OK'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`poker-clock-render-proxy listening on ${PORT}`));

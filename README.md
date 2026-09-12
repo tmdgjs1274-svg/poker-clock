@@ -1,21 +1,25 @@
-# 포커 클락 - Render 중계 서버 (구글시트 DB 유지)
+# 포커 클락 - Render로 통째로 배포 (구글시트 DB 유지)
 
-기존 구조를 그대로 유지하면서, **Google Apps Script 백엔드(doGet/doPost, `/exec` URL)만
-Render에서 돌아가는 웹 서버로 교체**합니다. DB는 지금처럼 계속 Google Sheets를 씁니다.
+**Render 서비스 주소 하나로 포커 클락 화면 + 구글시트 연동이 전부 동작합니다.**
+`public/index.html`(포커 클락 화면 그 자체)과 `server.js`(구글시트로 이어주는
+API)를 이 서버 하나가 같이 서빙합니다.
 
-- `index.html`은 거의 그대로 둡니다. "구글시트 DB 연결" 모달에 넣는 **URL만
-  Apps Script `/exec` 주소 → Render `/exec` 주소로 바꾸면** 됩니다.
-- 비밀번호 입력 방식도 그대로입니다 (Render 쪽 `APP_PASSWORD` 환경변수와 동일한 값을 입력).
+- 배포 후 `https://<서비스이름>.onrender.com` 주소로 그냥 접속하면 바로 클락
+  화면이 뜹니다. 로컬에서 `index.html`을 따로 열 필요 없습니다.
+- "구글시트 DB 연결" 모달의 URL 칸도 이 서버 자기 자신(`/exec`)으로 이미
+  채워져 있어서 URL을 따로 입력할 필요가 없습니다 — 비밀번호(APP_PASSWORD와
+  동일한 값)만 한 번 입력하면 연결됩니다.
 - Render 무료 웹서비스는 15분 미사용 시 슬립되고, 재시작 때 로컬 파일이 초기화되지만
   이 서버는 로컬에 아무것도 저장하지 않고 **매 요청마다 구글시트를 읽고 씁니다** —
   그래서 무료 플랜으로도 데이터가 안전합니다. (첫 요청이 슬립 후라면 깨어나는 데
   ~1분 정도 걸릴 수 있습니다.)
+- 헬스체크(단순 생존 확인)는 `/healthz`로 옮겨뒀습니다 (`/`는 이제 클락 화면 차지).
 
 > ✅ 실제 보내주신 `index.html`의 `dbFetchGet`/`dbFetchPost` 및 DB 모달 코드를 직접
 > 읽고 맞춘 계약입니다 (추정 아님, 로컬에서 목(mock) 서버로 6가지 action 전부
-> 응답 형식까지 왕복 테스트 완료). `index.html`은 한 글자도 바꾸지 않아도 됩니다 —
-> "구글시트 DB 연결" 모달의 URL 필드에 Render 배포 후 나온 `.../exec` 주소만
-> 새로 입력하면 그대로 연결됩니다.
+> 응답 형식까지 왕복 테스트 완료). `public/index.html` 안의 URL 기본값도 이미
+> `/exec`(자기 자신)로 바꿔뒀기 때문에, 배포된 주소로 접속하기만 하면 비밀번호만
+> 입력해도 바로 연결됩니다.
 >
 > 계약 요약:
 > - `loadLatest` (GET) → `{ ok, data?, updatedAt? }` (저장된 게 없으면 `data`/`updatedAt` 생략)
@@ -62,9 +66,9 @@ npm start
    - `GOOGLE_SERVICE_ACCOUNT_KEY_BASE64`: 서비스 계정 JSON 키 파일 전체를
      base64로 인코딩한 값 (`base64 -w0 파일.json` 명령 결과를 그대로 붙여넣기)
 4. 배포가 끝나면 `https://poker-clock-render-proxy-xxxx.onrender.com` 같은
-   주소가 생깁니다. 여기에 `/exec`를 붙인 주소
-   (`https://poker-clock-render-proxy-xxxx.onrender.com/exec`)가
-   `index.html`의 "구글시트 DB 연결" 모달에 넣을 새 URL입니다.
+   주소가 생깁니다. **이 주소로 그냥 접속하면 포커 클락 화면이 바로 뜹니다.**
+   "구글시트 DB 연결" 모달을 열면 URL은 이미 채워져 있고, 비밀번호(APP_PASSWORD와
+   동일한 값)만 입력하면 연결됩니다.
 
 ## 4. 저장 방식 / 한계
 

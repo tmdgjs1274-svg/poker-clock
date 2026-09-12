@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>포커 토너먼트 클락 - Blind Valet 스타일</title>
+<style>
+  :root{
+    --bg: #ffffff;
+    --panel: #f6f9f6;
+    --panel-2: #edf3ed;
+    --border: #d9e2d9;
+    --accent: #15803d;
+    --accent-2: #16a34a;
+    --accent-soft: rgba(21,128,61,0.08);
+    --on-accent: #ffffff;
+    --text: #16201a;
+    --muted: #667066;
+    --muted-2: #97a197;
+    --danger: #dc2626;
+    --good: #15803d;
+  }
+  body.theme-dark{
+    --bg: #10160f;
+    --panel: #171f18;
+    --panel-2: #1f2a21;
+    --border: #2b3a2d;
+    --accent: #22c55e;
+    --accent-2: #4ade80;
+    --accent-soft: rgba(34,197,94,0.16);
+    --on-accent: #08170d;
+    --text: #e7f2e9;
+    --muted: #93a695;
+    --muted-2: #66795f;
+    --danger: #f87171;
+    --good: #22c55e;
+  }
+  body.theme-purple{
+    --bg: #1a0b2e;
+    --panel: #241442;
+    --panel-2: #2f1b56;
+    --border: #40276e;
+    --accent: #c026d3;
+    --accent-2: #e879f9;
+    --accent-soft: rgba(192,38,211,0.18);
+    --on-accent: #ffffff;
+    --text: #f3e8ff;
+    --muted: #b8a2d9;
+    --muted-2: #8570ab;
+    --danger: #f87171;
+    --good: #c026d3;
+  }
+  body.theme-blue{
+    --bg: #0a1330;
+    --panel: #101c3d;
+    --panel-2: #16254a;
+    --border: #22335e;
+    --accent: #38bdf8;
+    --accent-2: #60a5fa;
+    --accent-soft: rgba(56,189,248,0.16);
+    --on-accent: #071427;
+    --text: #e6f1fb;
+    --muted: #92a8c9;
+    --muted-2: #5f7699;
+    --danger: #f87171;
+    --good: #38bdf8;
+  }
+  /* 레인보우: 네온 포커 방송 그래픽 느낌 — 짙은 네이비 바탕 + 카드 무늬(♠♥♦♣) 패턴, 그라디언트는 쓰지 않는다. */
+  body.theme-rainbow{
+    --bg: #0a0e27;
+    --panel: #10143a;
+    --panel-2: #171b4d;
+    --border: #3d4380;
+    --accent: #ff2d95;
+    --accent-2: #22d3ee;
+    --accent-soft: rgba(255,45,149,0.18);
+    --on-accent: #0a0e27;
+    --text: #f3eeff;
+    --muted: #b9a8e8;
+    --muted-2: #6f6bab;
+    --danger: #ff5470;
+    --good: #22d3ee;
+  }
+  body.theme-rainbow{
+    background-color: #0a0e27;
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221600%22%20height%3D%22900%22%20viewBox%3D%220%200%201600%20900%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22neonGrad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23ff2d95%22%2F%3E%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22%23c084fc%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2322d3ee%22%2F%3E%3C%2FlinearGradient%3E%3Cfilter%20id%3D%22haloBlur%22%20x%3D%22-150%25%22%20y%3D%22-150%25%22%20width%3D%22400%25%22%20height%3D%22400%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2222%22%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%22softBlur%22%20x%3D%22-100%25%22%20y%3D%22-100%25%22%20width%3D%22300%25%22%20height%3D%22300%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%227%22%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%22ambientBlur%22%20x%3D%22-100%25%22%20y%3D%22-100%25%22%20width%3D%22300%25%22%20height%3D%22300%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2260%22%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%22shadowBlur%22%20x%3D%22-100%25%22%20y%3D%22-100%25%22%20width%3D%22300%25%22%20height%3D%22300%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%225%22%2F%3E%3C%2Ffilter%3E%3Cpath%20id%3D%22shSpade%22%20d%3D%22M100%2010%20C%2055%2055%2C%2020%2090%2C%2020%20130%20C%2020%20165%2C%2050%20185%2C%2078%20175%20C%2088%20171%2C%2096%20163%2C%20100%20150%20C%20104%20163%2C%20112%20171%2C%20122%20175%20C%20150%20185%2C%20180%20165%2C%20180%20130%20C%20180%2090%2C%20145%2055%2C%20100%2010%20Z%20M100%20150%20L%2078%20225%20L%20122%20225%20Z%22%2F%3E%3Cpath%20id%3D%22shHeart%22%20d%3D%22M100%20190%20C%2030%20140%2C%205%2095%2C%205%2065%20C%205%2030%2C%2032%208%2C%2062%208%20C%2082%208%2C%2096%2020%2C%20100%2038%20C%20104%2020%2C%20118%208%2C%20138%208%20C%20168%208%2C%20195%2030%2C%20195%2065%20C%20195%2095%2C%20170%20140%2C%20100%20190%20Z%22%2F%3E%3Cpath%20id%3D%22shDiamond%22%20d%3D%22M100%205%20L%20190%20130%20L%20100%20255%20L%2010%20130%20Z%22%2F%3E%3Cg%20id%3D%22shClub%22%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2260%22%20r%3D%2242%22%2F%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%22110%22%20r%3D%2242%22%2F%3E%3Ccircle%20cx%3D%22110%22%20cy%3D%22110%22%20r%3D%2242%22%2F%3E%3Cpath%20d%3D%22M70%20130%20L%2050%20210%20L%2090%20210%20Z%22%2F%3E%3C%2Fg%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%22360%22%20cy%3D%22430%22%20r%3D%22260%22%20fill%3D%22%23ff2d95%22%20opacity%3D%220.10%22%20filter%3D%22url%28%23ambientBlur%29%22%2F%3E%3Ccircle%20cx%3D%221230%22%20cy%3D%22440%22%20r%3D%22260%22%20fill%3D%22%2322d3ee%22%20opacity%3D%220.10%22%20filter%3D%22url%28%23ambientBlur%29%22%2F%3E%3Ccircle%20cx%3D%22800%22%20cy%3D%22200%22%20r%3D%22220%22%20fill%3D%22%23c084fc%22%20opacity%3D%220.08%22%20filter%3D%22url%28%23ambientBlur%29%22%2F%3E%3Cg%20transform%3D%22translate%28150%2C260%29%20rotate%28-8%29%20scale%282.35%29%22%3E%3Cuse%20href%3D%22%23shSpade%22%20fill%3D%22none%22%20stroke%3D%22%23000814%22%20stroke-width%3D%226.2%22%20opacity%3D%220.42%22%20filter%3D%22url%28%23shadowBlur%29%22%20transform%3D%22translate%284%2C6%29%22%2F%3E%3Cuse%20href%3D%22%23shSpade%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%2214%22%20opacity%3D%220.38%22%20filter%3D%22url%28%23haloBlur%29%22%2F%3E%3Cuse%20href%3D%22%23shSpade%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%228%22%20opacity%3D%220.55%22%20filter%3D%22url%28%23softBlur%29%22%2F%3E%3Cuse%20href%3D%22%23shSpade%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%223.2%22%20opacity%3D%220.95%22%2F%3E%3Cuse%20href%3D%22%23shSpade%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.3%22%20opacity%3D%220.55%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28860%2C300%29%20rotate%288%29%20scale%281.25%29%22%3E%3Cuse%20href%3D%22%23shClub%22%20fill%3D%22none%22%20stroke%3D%22%23000814%22%20stroke-width%3D%226.2%22%20opacity%3D%220.42%22%20filter%3D%22url%28%23shadowBlur%29%22%20transform%3D%22translate%284%2C6%29%22%2F%3E%3Cuse%20href%3D%22%23shClub%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%2214%22%20opacity%3D%220.38%22%20filter%3D%22url%28%23haloBlur%29%22%2F%3E%3Cuse%20href%3D%22%23shClub%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%228%22%20opacity%3D%220.55%22%20filter%3D%22url%28%23softBlur%29%22%2F%3E%3Cuse%20href%3D%22%23shClub%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%223.2%22%20opacity%3D%220.95%22%2F%3E%3Cuse%20href%3D%22%23shClub%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.3%22%20opacity%3D%220.55%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28620%2C-40%29%20rotate%286%29%20scale%281.7%29%22%3E%3Cuse%20href%3D%22%23shHeart%22%20fill%3D%22none%22%20stroke%3D%22%23000814%22%20stroke-width%3D%226%22%20opacity%3D%220.42%22%20filter%3D%22url%28%23shadowBlur%29%22%20transform%3D%22translate%284%2C6%29%22%2F%3E%3Cuse%20href%3D%22%23shHeart%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%2212%22%20opacity%3D%220.34%22%20filter%3D%22url%28%23haloBlur%29%22%2F%3E%3Cuse%20href%3D%22%23shHeart%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%227%22%20opacity%3D%220.5%22%20filter%3D%22url%28%23softBlur%29%22%2F%3E%3Cuse%20href%3D%22%23shHeart%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%223%22%20opacity%3D%220.95%22%2F%3E%3Cuse%20href%3D%22%23shHeart%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.2%22%20opacity%3D%220.55%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28680%2C660%29%20rotate%28-6%29%20scale%281.7%29%22%3E%3Cuse%20href%3D%22%23shDiamond%22%20fill%3D%22none%22%20stroke%3D%22%23000814%22%20stroke-width%3D%226%22%20opacity%3D%220.42%22%20filter%3D%22url%28%23shadowBlur%29%22%20transform%3D%22translate%284%2C6%29%22%2F%3E%3Cuse%20href%3D%22%23shDiamond%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%2212%22%20opacity%3D%220.34%22%20filter%3D%22url%28%23haloBlur%29%22%2F%3E%3Cuse%20href%3D%22%23shDiamond%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%227%22%20opacity%3D%220.5%22%20filter%3D%22url%28%23softBlur%29%22%2F%3E%3Cuse%20href%3D%22%23shDiamond%22%20fill%3D%22none%22%20stroke%3D%22url%28%23neonGrad%29%22%20stroke-width%3D%223%22%20opacity%3D%220.95%22%2F%3E%3Cuse%20href%3D%22%23shDiamond%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.2%22%20opacity%3D%220.55%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Pretendard","Apple SD Gothic Neo","Segoe UI",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .2s ease, color .2s ease;
+  }
+  button{ font-family: inherit; }
+  .app{ display:flex; flex-direction:column; min-height:100vh; }
+
+  /* ---------- Header ---------- */
+  .topbar{
+    display:flex; align-items:center;
+    padding:14px 22px; border-bottom:1px solid var(--border);
+    background: var(--bg);
+  }
+  .topbar .spacer-side{ flex:1; display:flex; min-width:0; }
+  .topbar .spacer-side.right{ justify-content:flex-end; min-width:0; }
+  .pill-btn{
+    display:flex; align-items:center; gap:6px;
+    background: var(--panel-2); color: var(--text);
+    border:1px solid var(--border); border-radius:20px;
+    padding:8px 16px; font-size:14px; cursor:pointer; white-space:nowrap;
+  }
+  .pill-btn:hover{ background:var(--panel-2); }
+  .title-wrap{ position:relative; display:flex; align-items:center; gap:10px; min-width:0; }
+  .title-btn{ font-size:16px; font-weight:700; min-width:0; max-width:100%; }
+  .title-btn .chev{ color:var(--muted); font-size:11px; margin-left:2px; flex-shrink:0; }
+  #tournamentTitle{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+  .icon-btn{
+    background:transparent; border:none; color:var(--muted);
+    cursor:pointer; font-size:18px; padding:4px; border-radius:8px;
+  }
+  .icon-btn:hover{ color:var(--accent); background:var(--panel-2); }
+
+  .template-menu{
+    position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    background:var(--bg); border:1px solid var(--border); border-radius:10px;
+    box-shadow:0 10px 28px rgba(20,40,20,0.12); min-width:270px; z-index:40; padding:8px;
+  }
+  .template-menu[hidden]{ display:none; }
+  .template-menu-list{ max-height:280px; overflow-y:auto; }
+  .template-menu-item{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:9px 10px; border-radius:8px; cursor:pointer; font-size:14px;
+  }
+  .template-menu-item:hover{ background:var(--panel-2); }
+  .template-menu-item.active{ background:var(--accent-soft); color:var(--accent); font-weight:700; }
+  .template-menu-item .tmpl-actions{ display:flex; gap:2px; flex-shrink:0; }
+  .template-menu-item .tmpl-actions button{
+    background:none; border:none; color:var(--muted); cursor:pointer; font-size:13px; padding:3px 5px; border-radius:6px;
+  }
+  .template-menu-item .tmpl-actions button:hover{ color:var(--accent); background:var(--panel); }
+  .template-menu-item .tmpl-actions button.del:hover{ color:var(--danger); }
+  .template-menu-item .tmpl-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .template-menu-add{
+    width:100%; margin-top:6px; background:var(--panel-2); border:1px dashed var(--border); color:var(--accent);
+    border-radius:8px; padding:9px; font-size:13px; cursor:pointer; font-weight:600;
+  }
+  .template-menu-add:hover{ background:var(--accent-soft); }
+
+  .view{ display:none; flex:1; }
+  .view.active{ display:flex; flex-direction:column; }
+
+  /* =====================================================
+     CLOCK VIEW
+  ===================================================== */
+  /* 가로 3단 구조: 1) 시계, 2) 블라인드 값(SB/BB/Ante), 3) 블라인드 구조 목록 이 좌->우로 나란히 배치됨 */
+  #clockView.active{ flex-direction:row; }
+  /* 좌측 그룹(시계+블라인드값)의 전체 폭 비율은 기존 시계(2.5)+블라인드값(1.7) 합과 동일하게 유지한다. */
+  .clock-left-group{ display:flex; flex-direction:row; flex:4.2; min-height:0; min-width:0; }
+  .clock-timer-row{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:22px; border-bottom:none;
+    flex:2.5; min-height:0; min-width:0;
+  }
+  .time-row{ display:flex; justify-content:space-between; width:100%; max-width:900px; margin-bottom:clamp(14px,2.4vh,32px); }
+  .time-chip{ display:flex; align-items:center; gap:8px; color:var(--accent); font-size:clamp(16px,1.4vw,26px); font-weight:700; }
+  .time-chip .lbl{ font-size:11px; color:var(--muted); font-weight:600; display:block; letter-spacing:1px; }
+  .big-timer{
+    font-size:clamp(72px, min(7vw, 24vh), 240px); font-weight:800; color:var(--accent); line-height:1;
+    font-variant-numeric: tabular-nums; margin: clamp(10px,2vh,22px) 0 clamp(26px,5vh,50px);
+    letter-spacing:2px;
+  }
+  .big-timer.warn{ color: var(--danger); }
+  .progress-track{
+    width:100%; max-width:900px; height:6px; background:var(--panel-2);
+    border-radius:3px; position:relative; margin-bottom:clamp(16px,3vh,32px); cursor:pointer;
+    touch-action:none;
+  }
+  /* 트랙 자체는 얇지만, 손가락으로도 잡기 쉽도록 위아래로 보이지 않는 히트 영역을 넓혀준다
+     (실제 막대 모양/색상에는 영향을 주지 않는다). */
+  .progress-track::before{
+    content:''; position:absolute; left:0; right:0; top:50%; height:28px; transform:translateY(-50%);
+  }
+  .progress-fill{ position:absolute; top:0; left:0; height:100%; background:var(--accent); border-radius:3px; }
+  .progress-dot{
+    position:absolute; top:50%; width:16px; height:16px; background:var(--accent);
+    border-radius:50%; transform:translate(-50%,-50%);
+  }
+  .controls-row{ display:flex; align-items:center; gap:clamp(16px,2.2vw,32px); }
+  .ctrl-btn{
+    background:transparent; border:none; color:var(--text); cursor:pointer;
+    font-size:clamp(18px,2vw,26px); padding:8px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+  }
+  .ctrl-btn:hover{ background:var(--panel-2); color:var(--accent); }
+  .ctrl-btn.play{
+    background: var(--accent); color: var(--on-accent);
+    width:clamp(50px,5vw,70px); height:clamp(50px,5vw,70px); border-radius:50%; font-size:clamp(22px,2.4vw,30px);
+  }
+  .ctrl-btn.play:hover{ background: var(--accent-2); }
+  .ctrl-btn.muted{ color:var(--muted-2); }
+
+  .clock-blinds-row{
+    display:flex; flex-direction:column;
+    flex:1.7; min-height:0; min-width:0;
+  }
+  .col-splitter{
+    flex:0 0 10px; align-self:stretch; display:flex; align-items:center; justify-content:center;
+    cursor:col-resize; position:relative; touch-action:none;
+  }
+  .col-splitter::before{
+    content:''; position:absolute; top:0; bottom:0; left:50%; width:1px;
+    background:var(--border); transform:translateX(-50%);
+  }
+  .col-splitter-grip{
+    width:4px; height:36px; border-radius:3px; background:var(--muted-2); opacity:0.55;
+    pointer-events:none;
+  }
+  .col-splitter:hover .col-splitter-grip, .col-splitter.dragging .col-splitter-grip{ background:var(--accent); opacity:1; }
+  .col-splitter:hover::before, .col-splitter.dragging::before{ background:var(--accent); }
+  body.col-resizing{ cursor:col-resize !important; user-select:none; }
+  body.col-resizing *{ user-select:none; }
+  .blind-box{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:14px 20px; border-top:1px solid var(--border); flex:1; min-height:0;
+  }
+  .blind-box:first-child{ border-top:none; }
+  .blind-box.break-merged{ border-top:none; }
+  .blind-box .lbl{ font-size:clamp(19px,1.5vw,25px); font-weight:800; color:var(--accent-2); letter-spacing:2px; margin-bottom:8px; }
+  .blind-box .val{ font-size:clamp(44px, min(6vw,14vh), 92px); font-weight:800; }
+  .blind-box.break-merged .val{ font-size:clamp(20px, min(2.6vw,5vh), 40px); text-align:center; white-space:normal; word-break:keep-all; line-height:1.35; padding:0 12px; }
+
+  /* =====================================================
+     레이아웃 2: 좌측 그룹을 세로로 쌓아 위에는 시계, 아래에는 SB/BB/Ante를 가로로 배치한다.
+     (오른쪽 블라인드 구조 목록은 레이아웃1과 동일하게 그대로 유지)
+  ===================================================== */
+  body.layout-2 .clock-left-group{ flex-direction:column; }
+  body.layout-2 .clock-timer-row{ flex:1.6; padding:16px 22px; }
+  body.layout-2 #splitter1{ display:none; }
+  body.layout-2 .clock-blinds-row{ flex-direction:row; flex:1; }
+  body.layout-2 .blind-box{ border-top:none; border-left:1px solid var(--border); }
+  body.layout-2 .blind-box:first-child{ border-left:none; }
+  body.layout-2 .blind-box.break-merged{ border-left:none; }
+  body.layout-2 .blind-box .val{ font-size:clamp(36px, min(4.2vw,13vh), 76px); }
+
+  /* =====================================================
+     레이아웃 3 (모바일): 갤럭시 S24+ 가로모드 미러링 전용(약 832x384 뷰포트 기준).
+     레이아웃2처럼 시계 위/SB·BB·Ante 아래 가로 배치를 그대로 차용하되, 세로 폭이 매우 좁은 화면에 맞춰
+     여백/폰트를 큰 폭으로 줄인다. 블라인드 구조 목록은 2~3개만 보이면 되므로 한 줄 높이를 넉넉히 쓴다.
+     (일반 모바일 자동 스택 규칙(@media max-width:900px)보다 이 규칙이 항상 우선하도록 셀렉터 특이도를 높여 둔다.)
+  ===================================================== */
+  body.layout-3 #clockView.active{ flex-direction:row; }
+  body.layout-3 .clock-left-group{ flex-direction:column; flex:3.4; min-height:0; min-width:0; }
+  body.layout-3 .clock-timer-row{ flex:1.5; padding:6px 10px; border-bottom:none; min-height:0; }
+  /* 시계 영역은 실제 내용보다 훨씬 여유 있게 높이를 배정받아(가운데 정렬로 남는 공간이 큼) 그 여유분을
+     간격으로 돌려써도 전체 높이(스크롤 여부)에는 영향이 없다. (1)시간표기~(2)타이머, (2)타이머~(3)컨트롤 사이를 넓힌다. */
+  body.layout-3 .time-row{ margin-bottom:16px; max-width:100%; }
+  body.layout-3 .time-chip{ font-size:17px; gap:4px; }
+  body.layout-3 .time-chip .lbl{ font-size:10px; }
+  body.layout-3 .big-timer{ font-size:clamp(34px, 15vh, 68px); margin:10px 0 16px; letter-spacing:0.5px; }
+  body.layout-3 .progress-track{ margin-bottom:18px; height:4px; max-width:100%; }
+  body.layout-3 .progress-dot{ width:11px; height:11px; }
+  body.layout-3 .controls-row{ gap:20px; }
+  body.layout-3 .ctrl-btn{ font-size:22px; padding:6px; }
+  body.layout-3 .ctrl-btn.play{ width:48px; height:48px; font-size:24px; }
+  body.layout-3 #splitter1{ display:none; }
+  body.layout-3 .clock-blinds-row{ flex-direction:row; flex-wrap:nowrap; flex:1; min-height:0; }
+  body.layout-3 .blind-box{ padding:4px 6px; border-top:none; border-left:1px solid var(--border); min-width:0; }
+  body.layout-3 .blind-box:first-child{ border-left:none; }
+  body.layout-3 .blind-box .lbl{ font-size:clamp(9px,1.6vh,13px); margin-bottom:2px; letter-spacing:0.5px; }
+  body.layout-3 .blind-box .val{ font-size:clamp(24px, 9vh, 46px); }
+  body.layout-3 .blind-box.break-merged .val{ font-size:clamp(11px,2vh,16px); padding:0 4px; }
+  /* splitter1(시계<->블라인드값)은 레이아웃3이 세로로 쌓는 구조라 의미가 없어 숨기지만,
+     splitter2(좌측 그룹<->블라인드 구조 목록)는 여전히 좌우로 나란히 배치되므로 그대로 드래그로 폭 조절이 가능해야 한다.
+     예전엔 .col-splitter 전체를 숨겨서 splitter2까지 같이 사라지고 동작하지 않았던 것을 바로잡는다.
+     (일반 모바일 자동 숨김 규칙(@media max-width:900px .col-splitter{display:none})보다 이 규칙이
+     우선하도록 셀렉터 특이도를 높여, 좁은 화면에서도 splitter2는 계속 보이고 동작하게 한다.) */
+  body.layout-3 .col-splitter{ display:flex; }
+  /* 우측 블라인드 구조 목록 폭을 기존보다 약 30% 줄여, 시계/블라인드값 쪽에 더 넓은 공간을 준다. */
+  body.layout-3 .clock-lower{ flex:1.3; min-height:0; min-width:0; }
+  body.layout-3 .structure-preview{ padding:10px 8px; }
+  /* 목록은 2~3개만 보여도 되므로, 항목 수를 줄이는 대신 한 줄 높이를 넉넉하게 키워 가독성을 높인다. */
+  body.layout-3 #previewRows{ gap:10px; }
+  body.layout-3 .preview-row{ padding:16px 14px; gap:6px; }
+  /* 좁은 목록 폭에서 뱃지+5자리 금액+안테가 겹치면 금액이 세 줄로 접혀 카드가 들쭉날쭉해지므로,
+     레벨/시간(+뱃지) 줄과 금액 줄을 위아래로 분리해 각자 전체 폭을 쓰게 한다. */
+  body.layout-3 .preview-row .prow-inner{ flex-direction:column; align-items:flex-start; gap:4px; }
+  body.layout-3 .preview-row .lvl{ font-size:22px; }
+  body.layout-3 .preview-row .prow-time{ font-size:14px; }
+  body.layout-3 .preview-row .bl{ width:100%; text-align:left; font-size:19px; }
+  /* 안테까지 붙으면 한 줄에 다 안 들어가 줄바꿈이 들쭉날쭉해지므로, 안테는 항상 별도 줄로 고정한다
+     (안테가 없는 레벨은 빈 태그라 자동으로 숨겨져 줄 수가 늘지 않는다). */
+  body.layout-3 .preview-row .bl .ante{ font-size:15px; display:block; margin-top:2px; }
+  body.layout-3 .preview-row .bl .ante:empty{ display:none; }
+  body.layout-3 .preview-row .row-tag{ font-size:11px; padding:3px 10px; }
+  /* 브레이크 카드는 아이콘+시간+뱃지 다음에 문구가 바로 이어지는 한 줄 구조라, 좁아진 목록 폭에서
+     문구 칸이 거의 안 남아 글자가 한 글자씩 줄바꿈되던 문제가 있었다. 문구를 항상 다음 줄 전체 폭으로 내린다. */
+  body.layout-3 .preview-row.break-row .prow-top{ flex-wrap:wrap; row-gap:4px; }
+  body.layout-3 .preview-row.break-row .bl{ flex:1 1 100%; text-align:left; font-size:15px; white-space:normal; word-break:keep-all; }
+
+  .clock-lower{ display:flex; flex-direction:column; flex:1.8; min-height:0; min-width:0; }
+  .structure-preview{ padding:22px 16px; display:flex; flex-direction:column; flex:1; min-height:0; }
+  #previewRows{ display:flex; flex-direction:column; gap:8px; flex:1; min-height:0; overflow:hidden; }
+  .preview-row{
+    position:relative;
+    display:flex; flex-direction:column; justify-content:center; gap:8px;
+    padding:26px 10px; border:1px solid var(--border); border-radius:10px; flex:0 0 auto;
+  }
+  .preview-row.current{ border-color: var(--accent); background: var(--accent-soft); }
+  .preview-row.next{ border-color: var(--accent-2); }
+  /* 레벨 행: 레벨 번호+분(+뱃지)과 블라인드 금액을 같은 줄에, 카드 높이 기준 세로 중앙에 나란히 배치한다. */
+  .preview-row .prow-inner{ display:flex; align-items:center; gap:6px; }
+  .preview-row .prow-left{ display:flex; align-items:center; gap:4px; flex-shrink:0; }
+  .preview-row .lvl{ color:var(--accent); font-weight:700; font-size:clamp(14px,1.35vw,27px); flex-shrink:0; }
+  /* 시인성을 위해 muted 색상을 text 쪽으로 많이 섞어 대비를 높인다 (특히 퍼플/블루 테마에서 잘 안 보이던 문제 개선). */
+  .preview-row .prow-time{ color: color-mix(in srgb, var(--muted) 25%, var(--text) 75%); font-size:clamp(10px,0.9vw,18px); white-space:nowrap; }
+  /* 뱃지가 붙는 줄(현재/다음)은 왼쪽 공간이 넓어져 금액 자리가 좁아지므로, 그 좁은 경우도 안 잘리는 크기를
+     모든 레벨에 동일하게 적용한다 (뱃지 유무와 상관없이 폰트 크기가 항상 같아야 하므로). */
+  .preview-row .bl{ font-size:clamp(13px,1.8vw,28px); font-weight:800; text-align:right; white-space:normal; word-break:keep-all; min-width:0; flex:1; }
+  .preview-row .bl .ante{ font-size:clamp(13px,1.8vw,28px); color: color-mix(in srgb, var(--muted) 25%, var(--text) 75%); font-weight:600; }
+  /* 브레이크 행: [아이콘] [분] [브레이크 내용]을 한 줄로, 폰트는 레벨 행보다 조금 작게. */
+  .preview-row.break-row{ color:var(--muted-2); font-style:italic; }
+  .preview-row .prow-top{ display:flex; align-items:baseline; gap:10px; }
+  .preview-row.break-row .prow-top{ gap:10px; }
+  .preview-row.break-row .prow-time{ margin-left:0; font-size:clamp(11px,0.8vw,15px); }
+  .preview-row.break-row .bl{ flex:1; text-align:right; font-size:clamp(11px,0.95vw,15px); font-weight:600; max-width:none; }
+  .preview-row .row-tag{
+    display:inline-flex; align-items:center; flex-shrink:0; color:var(--on-accent);
+    font-size:12.5px; font-weight:700; padding:3px 12px; border-radius:11px; letter-spacing:0.5px;
+  }
+  .preview-row .row-tag.next-tag{ background:var(--accent); }
+  .preview-row .row-tag.cur-tag{ background:var(--accent-2); }
+
+  /* =====================================================
+     STRUCTURE VIEW
+  ===================================================== */
+  .structure-grid{ display:flex; flex-direction:column; flex:1; }
+  .checkbox-field{ display:flex; align-items:center; gap:8px; }
+  .checkbox-field input{ width:18px; height:18px; accent-color: var(--accent); }
+  .checkbox-field label{ font-size:14px; color:var(--text); margin:0; }
+
+  .table-panel{ padding:22px 26px; overflow-y:auto; }
+  .table-toolbar{ display:flex; align-items:center; justify-content:flex-end; gap:22px; margin-bottom:16px; flex-wrap:wrap; }
+  .tool-link{ display:flex; align-items:center; gap:6px; color:var(--accent); font-size:13px; cursor:pointer; background:none; border:none; }
+  .tool-link:hover{ text-decoration:underline; }
+  .tool-link.muted-link{ color:var(--muted); }
+  table.structure-table{ width:100%; border-collapse:collapse; }
+  table.structure-table th{
+    text-align:left; color:var(--muted); font-size:12px; font-weight:600; letter-spacing:1px;
+    padding:8px 10px; border-bottom:1px solid var(--border);
+  }
+  table.structure-table td{ padding:12px 10px; border-bottom:1px solid var(--border); font-size:15px; }
+  table.structure-table tr.level-row.current-row{ background: var(--accent-soft); }
+  table.structure-table tr.break-row td{ color:var(--muted); font-style:italic; }
+  .row-idx{ color:var(--accent); font-weight:700; }
+  .row-actions{ display:flex; gap:8px; justify-content:flex-end; }
+  .row-actions button{
+    background:none; border:none; color:var(--muted); cursor:pointer; font-size:15px; padding:4px;
+  }
+  .row-actions button:hover{ color:var(--accent); }
+  .row-actions button.del:hover{ color:var(--danger); }
+  table.structure-table input{
+    width:80px; background:var(--panel-2); border:1px solid var(--accent); color:var(--text);
+    border-radius:6px; padding:6px 8px; font-size:14px;
+  }
+  table.structure-table input.wide{ width:150px; }
+
+  /* Fullscreen mode */
+  /* 전체화면: 상단바/탭만 숨기고 시계+블라인드 구조는 그대로 보여준다 (현재 화면 그대로 전체화면 전환) */
+  body.fs-mode .topbar{ display:none !important; }
+  /* 브라우저 전체화면 진입 시 100vh 계산이 실제 뷰포트와 미세하게(수 px) 어긋나는 경우가 있어,
+     그로 인한 세로 스크롤바 발생을 막는다(내용은 항상 화면 안에 다 들어오도록 설계돼 있으므로 안전하다). */
+  html.fs-mode, body.fs-mode{ overflow:hidden; }
+
+  .fs-toggle-btn{
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .fs-toggle-btn:hover{ background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
+  /* 전체화면 모드에서는 헤더(.topbar) 자체가 숨겨지므로, 그 안에 있는 진입 버튼도 같이 사라진다.
+     그래서 전체화면 "종료"용 버튼은 헤더 바깥의 별도 오버레이로 두고, 전체화면일 때만 보여준다. */
+  #fsExitBtn{ display:none; }
+  body.fs-mode #fsExitBtn{
+    display:flex; position:fixed; top:16px; right:22px; z-index:60; width:40px; height:40px; font-size:18px;
+  }
+  /* 레이아웃3(모바일)은 화면이 매우 좁아 우측 상단에 두면 블라인드 구조 목록을 가리고,
+     그 자리를 비우려고 여백을 주면 오히려 전체 세로 스크롤이 생겨버린다.
+     그래서 목록 반대편인 좌측 상단 "진행된 시간" 표기 옆으로 옮겨 목록과 절대 겹치지 않게 한다. */
+  body.layout-3.fs-mode #fsExitBtn{
+    top:2px; left:2px; right:auto; width:24px; height:24px; font-size:11px; opacity:0.55;
+  }
+  body.layout-3.fs-mode #fsExitBtn:hover{ opacity:1; }
+  /* 위 버튼과 "진행된 시간" 텍스트가 겹치지 않도록, 그 버튼 폭만큼만 시간 줄을 살짝 오른쪽으로 밀어준다. */
+  body.layout-3.fs-mode .time-row{ padding-left:26px; }
+
+  ::-webkit-scrollbar{ width:10px; }
+  ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:6px; }
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    padding:12px 20px; border-radius:10px; font-size:14px; opacity:0; pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease; z-index:50; display:flex; gap:14px; align-items:center;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+  .toast button{ background:none;border:1px solid var(--border); color:var(--accent); border-radius:6px; padding:4px 10px; cursor:pointer; font-size:13px; }
+
+  @media (max-width: 560px){
+    /* 모바일 폭에서는 상단바 텍스트가 눌려서 줄바꿈되는 것을 막기 위해
+       가운데 템플릿 제목을 첫 줄로, 좌우 아이콘들을 둘째 줄로 나눠 2줄로 배치한다. */
+    .topbar{ flex-wrap:wrap; row-gap:10px; padding:10px 14px; }
+    .topbar .title-wrap{ order:1; flex:1 1 100%; justify-content:center; }
+    .topbar .spacer-side:first-child{ order:2; flex:1 1 auto; }
+    .topbar .spacer-side.right{ order:3; flex:1 1 auto; }
+    .title-btn{ max-width:78vw; font-size:15px; padding:7px 14px; }
+    .last-saved{ display:none; }
+    .more-menu-wrap .pill-btn{ padding:7px 12px; font-size:13px; }
+  }
+
+  @media (max-width: 900px){
+    /* 좁은 화면에서는 가로 3단이 아니라 기존처럼 세로로 쌓아서 보여준다 (레이아웃1/2 선택과 무관하게 항상 이 모바일 배치를 따른다) */
+    #clockView.active{ flex-direction:column; }
+    .clock-left-group{ flex-direction:column; flex:1 1 auto; }
+    .clock-timer-row{ border-right:none; border-bottom:1px solid var(--border); flex:1 1 auto; }
+    .big-timer{ font-size:64px; }
+    .clock-blinds-row{ flex-direction:row; flex-wrap:wrap; border-right:none; border-bottom:1px solid var(--border); }
+    .blind-box{ flex:1 1 50%; border-top:1px solid var(--border); }
+    .blind-box:nth-child(1), .blind-box:nth-child(2){ border-top:none; }
+    .blind-box.break-merged{ flex:1 1 100%; border-top:none; }
+    .col-splitter{ display:none; }
+  }
+
+  /* ---------- 더보기 메뉴 / DB 연결 ---------- */
+  .spacer-side.right{ gap:10px; }
+  .last-saved{ font-size:11.5px; color:var(--muted-2); white-space:nowrap; }
+  .more-menu-wrap{ position:relative; }
+  .more-menu{
+    position:absolute; top:calc(100% + 6px); right:0; min-width:150px;
+    background:var(--bg); border:1px solid var(--border); border-radius:8px;
+    box-shadow:0 8px 24px rgba(20,40,20,0.14); overflow:hidden; z-index:40;
+  }
+  .more-menu[hidden]{ display:none; }
+  .more-menu-item{
+    display:block; width:100%; text-align:left; border:none; background:transparent;
+    color:var(--text); padding:9px 14px; font-size:13px; cursor:pointer;
+  }
+  .more-menu-item:hover{ background:var(--panel-2); }
+  .more-menu-item.theme-item.active{ background:var(--accent-soft); color:var(--accent); font-weight:700; }
+  .more-menu-item.layout-item.active{ background:var(--accent-soft); color:var(--accent); font-weight:700; }
+  .more-menu-label{ padding:8px 14px 2px; font-size:11px; color:var(--muted-2); letter-spacing:1px; }
+  .more-menu-divider{ border-top:1px solid var(--border); margin:6px 0; }
+
+  .modal-backdrop{ display:none; position:fixed; inset:0; background:rgba(10,20,10,0.35); z-index:50; }
+  .modal-backdrop.show{ display:block; }
+  .modal{
+    display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:min(480px,92vw); max-height:85vh; overflow:auto;
+    background:var(--bg); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px 20px; box-shadow:0 16px 44px rgba(20,40,20,0.22); z-index:51;
+  }
+  .modal.show{ display:block; }
+  .modal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .modal-head h3{ margin:0; font-size:16px; }
+  .modal-close{ border:none; background:transparent; color:var(--muted); font-size:16px; cursor:pointer; padding:4px; }
+  .modal-close:hover{ color:var(--text); }
+  .modal-divider{ border:none; border-top:1px solid var(--border); margin:16px 0; }
+  .modal-note{ font-size:12.5px; color:var(--muted); margin:0 0 14px; line-height:1.5; }
+
+  .db-field{ display:flex; flex-direction:column; gap:4px; font-size:12.5px; color:var(--muted); margin-bottom:12px; }
+  .db-field span{ font-weight:600; }
+  .db-field input{
+    padding:9px 10px; border:1px solid var(--border); border-radius:8px;
+    background:var(--panel-2); color:var(--text); font-size:14px; width:100%;
+  }
+  .db-field input:focus{ outline:none; border-color:var(--accent); }
+  .db-toolbar{ display:flex; gap:8px; margin:10px 0 4px; flex-wrap:wrap; align-items:center; }
+  .db-btn{
+    border:1px solid var(--border); background:var(--panel-2); color:var(--text);
+    border-radius:8px; padding:8px 14px; font-size:13px; cursor:pointer;
+  }
+  .db-btn:hover{ background:var(--panel); }
+  .db-btn.primary{ background:var(--accent); color:var(--on-accent); border-color:transparent; }
+  .db-btn.primary:hover{ background:var(--accent-2); }
+  .db-btn.danger{ color:var(--danger); border-color:rgba(220,38,38,0.35); }
+  .db-btn.danger:hover{ background:rgba(220,38,38,0.08); }
+  .db-status{ font-size:12.5px; color:var(--muted); margin:6px 0 0; min-height:16px; line-height:1.5; }
+  .db-status.ok{ color:var(--good); font-weight:600; }
+  .db-status.bad{ color:var(--danger); font-weight:600; }
+  .db-status.loading{ color:var(--muted); }
+  .db-backup-picker{ margin-top:10px; display:none; }
+  .db-backup-picker.show{ display:block; }
+  .db-backup-picker select{
+    width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px;
+    background:var(--panel-2); color:var(--text); font-size:13px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="topbar">
+    <div class="spacer-side">
+      <button class="fs-toggle-btn" id="viewToggleBtn" title="블라인드 구조 편집 화면으로 전환">📊</button>
+    </div>
+    <div class="title-wrap">
+      <button class="pill-btn title-btn" id="templateBtn">
+        <span id="tournamentTitle">4~6인 바운티 토너먼트</span><span class="chev">▾</span>
+      </button>
+      <div class="template-menu" id="templateMenu" hidden="">
+        <div class="template-menu-list" id="templateMenuList"><div class="template-menu-item active"><span class="tmpl-name">4~6인 바운티 토너먼트</span><span class="tmpl-actions"><button class="ren" title="이름 변경">✎</button></span></div></div>
+        <button class="template-menu-add" id="addTemplateBtn">+ 새 템플릿 추가</button>
+      </div>
+    </div>
+    <div class="spacer-side right">
+      <span class="last-saved" id="lastSavedIndicator"></span>
+      <button class="fs-toggle-btn" id="fsBtn" title="전체화면">⛶</button>
+      <div class="more-menu-wrap">
+        <button class="pill-btn" id="moreMenuBtn">⋯ 더보기</button>
+        <div class="more-menu" id="moreMenu" hidden="">
+          <div class="more-menu-label">테마</div>
+          <button class="more-menu-item theme-item active" data-theme="light">☀️ 라이트</button>
+          <button class="more-menu-item theme-item" data-theme="dark">🌲 그린</button>
+          <button class="more-menu-item theme-item" data-theme="purple">💜 퍼플</button>
+          <button class="more-menu-item theme-item" data-theme="blue">💙 블루</button>
+          <button class="more-menu-item theme-item" data-theme="rainbow">🌈 레인보우</button>
+          <div class="more-menu-divider"></div>
+          <div class="more-menu-label">레이아웃</div>
+          <button class="more-menu-item layout-item active" data-layout="1">레이아웃1</button>
+          <button class="more-menu-item layout-item" data-layout="2">레이아웃2</button>
+          <button class="more-menu-item layout-item" data-layout="3">레이아웃3(모바일)</button>
+          <div class="more-menu-divider"></div>
+          <button class="more-menu-item" id="openDbModalBtn">DB 연결</button>
+          <button class="more-menu-item" id="downloadHtmlBtn">HTML 다운</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="dbModalBackdrop"></div>
+  <div class="modal" id="dbModal" role="dialog" aria-label="DB 연결">
+    <div class="modal-head">
+      <h3>구글시트 DB 연결</h3>
+      <button class="modal-close" id="dbModalClose">✕</button>
+    </div>
+    <p class="modal-note">
+      Google Apps Script로 배포한 웹 앱 URL로 연결합니다 (설정 방법은 함께 드린 Apps Script 코드 파일을 참고하세요).
+      URL과 비밀번호를 입력하면 자동으로 연결되고, 최신본을 불러온 뒤에는 블라인드 구조(레벨·휴식·안테·템플릿)를 수정할 때마다 실시간으로 최신본에 반영돼요.
+      진행 중인 타이머(경과/남은 시간, 재생 상태)는 저장 대상이 아니고, 불러올 때는 항상 초기화됩니다.
+    </p>
+    <label class="db-field">
+      <span>연동 URL (Apps Script 웹 앱 URL, .../exec)</span>
+      <input type="text" id="dbUrl" placeholder="https://script.google.com/macros/s/.../exec">
+    </label>
+    <label class="db-field">
+      <span>비밀번호</span>
+      <input type="text" id="dbPassword" placeholder="비밀번호">
+    </label>
+    <div class="db-toolbar">
+      <button class="db-btn" id="dbDisconnectBtn" style="display:none;">연결 해제</button>
+    </div>
+    <p class="db-status" id="dbStatus"></p>
+
+    <hr class="modal-divider">
+    <div class="db-toolbar">
+      <button class="db-btn" id="dbSaveBtn">현재 버전 저장(백업)</button>
+      <button class="db-btn" id="dbLoadBtn">백업 불러오기</button>
+    </div>
+    <div class="db-backup-picker" id="dbBackupPicker">
+      <label class="db-field">
+        <span>불러올 백업 선택</span>
+        <select id="dbBackupSelect"></select>
+      </label>
+      <div class="db-toolbar">
+        <button class="db-btn primary" id="dbLoadSelectedBtn">선택한 백업 불러오기</button>
+        <button class="db-btn danger" id="dbDeleteBackupBtn">선택한 백업 삭제</button>
+        <button class="db-btn" id="dbCancelLoadBtn">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 헤더 바깥에 둬야 전체화면 모드에서 헤더가 숨겨져도 이 버튼은 계속 보인다 -->
+  <button class="fs-toggle-btn" id="fsExitBtn" title="전체화면 종료">✕</button>
+
+  <!-- ============ CLOCK VIEW (가로 3단: 시계 / 블라인드 값 / 블라인드 구조) ============ -->
+  <div class="view active" id="clockView">
+
+    <!-- 좌측 그룹: 시계 + 블라인드 값 (레이아웃1=가로 2단 / 레이아웃2=시계 위, 블라인드값 아래 가로 배치) -->
+    <div class="clock-left-group" id="clockLeftGroup">
+      <!-- 1단(좌): 시계 -->
+      <div class="clock-timer-row">
+        <div class="time-row">
+          <div class="time-chip" title="진행된 시간">⏱ <span id="elapsedTotal">0:00:00</span></div>
+          <div class="time-chip" title="남은 시간">⏳ <span id="remainingTotal">1:50:00</span></div>
+        </div>
+        <div class="big-timer" id="bigTimer">07:00</div>
+        <div class="progress-track" id="progressTrack">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          <div class="progress-dot" id="progressDot" style="left:0%"></div>
+        </div>
+        <div class="controls-row">
+          <button class="ctrl-btn" id="muteBtn" title="소리 끄기/켜기">🔊</button>
+          <button class="ctrl-btn" id="prevBtn" title="이전 레벨">⏮</button>
+          <button class="ctrl-btn play" id="playBtn" title="시작/일시정지">▶</button>
+          <button class="ctrl-btn" id="nextBtn" title="다음 레벨">⏭</button>
+          <button class="ctrl-btn" id="resetBtn" title="처음으로 되돌리기">↺</button>
+        </div>
+      </div>
+
+      <!-- 1-2단 사이 스플리터 (레이아웃1에서만 표시) -->
+      <div class="col-splitter" id="splitter1" title="드래그하여 영역 너비 조절"><div class="col-splitter-grip"></div></div>
+
+      <!-- 2단(중): 블라인드 값 (SB/BB/Ante) -->
+      <div class="clock-blinds-row">
+        <div class="blind-box" id="sbBox" style="display: flex;"><div class="lbl">SB (Small Blind)</div><div class="val" id="sbVal">100</div></div>
+        <div class="blind-box" id="bbBox" style="display: flex;"><div class="lbl">BB (Big Blind)</div><div class="val" id="bbVal">200</div></div>
+        <div class="blind-box" id="anteBox" style="display: flex;"><div class="lbl">BB Ante</div><div class="val" id="anteVal">-</div></div>
+        <div class="blind-box break-merged" id="breakBox" style="display:none;"><div class="val" id="breakVal">휴식 중</div></div>
+      </div>
+    </div>
+
+    <!-- 좌측 그룹-3단 사이 스플리터 -->
+    <div class="col-splitter" id="splitter2" title="드래그하여 영역 너비 조절"><div class="col-splitter-grip"></div></div>
+
+    <!-- 3단(우): 블라인드 구조 목록 (좁아도 되는 영역) -->
+    <div class="clock-lower">
+      <div class="structure-preview">
+        <div id="previewRows"><div class="preview-row current"><div class="prow-inner"><div class="prow-left"><span class="lvl">1</span><span class="prow-time">(7분)</span><span class="row-tag cur-tag">현재 레벨</span></div><div class="bl">100 / 200 <span class="ante"></span></div></div></div><div class="preview-row next"><div class="prow-inner"><div class="prow-left"><span class="lvl">2</span><span class="prow-time">(7분)</span><span class="row-tag next-tag">다음 레벨</span></div><div class="bl">200 / 400 <span class="ante"></span></div></div></div><div class="preview-row"><div class="prow-inner"><div class="prow-left"><span class="lvl">3</span><span class="prow-time">(7분)</span></div><div class="bl">300 / 600 <span class="ante"></span></div></div></div><div class="preview-row"><div class="prow-inner"><div class="prow-left"><span class="lvl">4</span><span class="prow-time">(7분)</span></div><div class="bl">500 / 1,000 <span class="ante"></span></div></div></div><div class="preview-row break-row"><div class="prow-top break-line"><span class="lvl">☕</span><span class="prow-time">(1분)</span><span class="bl">브레이크 1 (100,500 칩 제거)</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STRUCTURE VIEW ============ -->
+  <div class="view" id="structureView">
+    <div class="structure-grid">
+
+      <div class="table-panel">
+        <div class="table-toolbar">
+          <div class="checkbox-field toolbar-checkbox">
+            <input type="checkbox" id="p_useAnte" checked="">
+            <label for="p_useAnte">BB Ante 사용유무</label>
+          </div>
+          <button class="tool-link" id="addLevelBtn">📶 레벨 추가</button>
+          <button class="tool-link" id="addBreakBtn">☕ 휴식 추가</button>
+        </div>
+        <table class="structure-table">
+          <thead>
+            <tr>
+              <th style="width:36px;"></th>
+              <th>시간</th>
+              <th>스몰 블라인드</th>
+              <th>BB</th>
+              <th id="anteTh">BB Ante</th>
+              <th style="text-align:right;">작업</th>
+            </tr>
+          </thead>
+          <tbody id="structureTbody"><tr class="level-row current-row"><td class="row-idx">1</td><td>7 (0:07)</td><td>100</td><td>200</td><td class="ante-cell" style="">-</td><td class="row-actions"><button class="edit" data-i="0" title="수정">✎</button><button class="del" data-i="0" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">2</td><td>7 (0:14)</td><td>200</td><td>400</td><td class="ante-cell" style="">-</td><td class="row-actions"><button class="edit" data-i="1" title="수정">✎</button><button class="del" data-i="1" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">3</td><td>7 (0:21)</td><td>300</td><td>600</td><td class="ante-cell" style="">-</td><td class="row-actions"><button class="edit" data-i="2" title="수정">✎</button><button class="del" data-i="2" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">4</td><td>7 (0:28)</td><td>500</td><td>1,000</td><td class="ante-cell" style="">-</td><td class="row-actions"><button class="edit" data-i="3" title="수정">✎</button><button class="del" data-i="3" title="삭제">🗑</button></td></tr><tr class="break-row"><td></td><td>1 (0:29)</td><td colspan="3">브레이크 1 (100,500 칩 제거)</td><td class="row-actions"><button class="edit" data-i="4" title="수정">✎</button><button class="del" data-i="4" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">5</td><td>10 (0:39)</td><td>1,000</td><td>2,000</td><td class="ante-cell" style="">2,000</td><td class="row-actions"><button class="edit" data-i="5" title="수정">✎</button><button class="del" data-i="5" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">6</td><td>10 (0:49)</td><td>2,000</td><td>4,000</td><td class="ante-cell" style="">4,000</td><td class="row-actions"><button class="edit" data-i="6" title="수정">✎</button><button class="del" data-i="6" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">7</td><td>10 (0:59)</td><td>3,000</td><td>6,000</td><td class="ante-cell" style="">6,000</td><td class="row-actions"><button class="edit" data-i="7" title="수정">✎</button><button class="del" data-i="7" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">8</td><td>10 (1:09)</td><td>4,000</td><td>8,000</td><td class="ante-cell" style="">8,000</td><td class="row-actions"><button class="edit" data-i="8" title="수정">✎</button><button class="del" data-i="8" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">9</td><td>10 (1:19)</td><td>5,000</td><td>10,000</td><td class="ante-cell" style="">10,000</td><td class="row-actions"><button class="edit" data-i="9" title="수정">✎</button><button class="del" data-i="9" title="삭제">🗑</button></td></tr><tr class="break-row"><td></td><td>1 (1:20)</td><td colspan="3">브레이크 2 (재입장 마감)</td><td class="row-actions"><button class="edit" data-i="10" title="수정">✎</button><button class="del" data-i="10" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">10</td><td>10 (1:30)</td><td>6,000</td><td>12,000</td><td class="ante-cell" style="">12,000</td><td class="row-actions"><button class="edit" data-i="11" title="수정">✎</button><button class="del" data-i="11" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">11</td><td>10 (1:40)</td><td>8,000</td><td>16,000</td><td class="ante-cell" style="">16,000</td><td class="row-actions"><button class="edit" data-i="12" title="수정">✎</button><button class="del" data-i="12" title="삭제">🗑</button></td></tr><tr class="level-row"><td class="row-idx">12</td><td>10 (1:50)</td><td>10,000</td><td>20,000</td><td class="ante-cell" style="">20,000</td><td class="row-actions"><button class="edit" data-i="13" title="수정">✎</button><button class="del" data-i="13" title="삭제">🗑</button></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Data model ---------------- */
+  // level: {type:'level', idx, minutes, sb, bb, ante}
+  // break: {type:'break', idx, minutes, label}
+  function lvl(minutes, sb, bb, ante){ return {type:'level', minutes, sb, bb, ante: ante||0}; }
+  function brk(minutes, label){ return {type:'break', minutes, label: label||'휴식'}; }
+
+  let structure = [
+    lvl(7, 100, 200, 0),
+    lvl(7, 200, 400, 0),
+    lvl(7, 300, 600, 0),
+    lvl(7, 500, 1000, 0),
+    brk(1, '브레이크 1 (100,500 칩 제거)'),
+    lvl(10, 1000, 2000, 2000),
+    lvl(10, 2000, 4000, 4000),
+    lvl(10, 3000, 6000, 6000),
+    lvl(10, 4000, 8000, 8000),
+    lvl(10, 5000, 10000, 10000),
+    brk(1, '브레이크 2 (재입장 마감)'),
+    lvl(10, 6000, 12000, 12000),
+    lvl(10, 8000, 16000, 16000),
+    lvl(10, 10000, 20000, 20000),
+  ];
+
+  let state = {
+    currentIndex: 0,
+    remainingSec: structure[0].minutes*60,
+    running: false,
+    // 누적시간(elapsed)은 별도 필드로 들고 있지 않고, 항상 currentIndex/remainingSec으로부터
+    // computeElapsedSec()로 계산한다(정의는 아래 참고).
+    muted: false,
+    anteEnabled: true
+  };
+
+  let timerHandle = null;
+
+  /* ---------------- Multi-template (여러 토너먼트 블라인드 구조) ---------------- */
+  let templates = [
+    { id: 1, name: '4~6인 바운티 토너먼트', structure: JSON.parse(JSON.stringify(structure)), anteEnabled: true }
+  ];
+  let activeTemplateId = 1;
+  let nextTemplateId = 2;
+
+  function persistActiveTemplate(){
+    const t = templates.find(t=>t.id===activeTemplateId);
+    if(t){
+      t.structure = JSON.parse(JSON.stringify(structure));
+      t.anteEnabled = state.anteEnabled;
+    }
+  }
+  function switchTemplate(id){
+    const t = templates.find(t=>t.id===id);
+    if(!t) return;
+    persistActiveTemplate();
+    activeTemplateId = id;
+    structure = JSON.parse(JSON.stringify(t.structure));
+    state.currentIndex = 0;
+    state.remainingSec = structure[0].minutes*60;
+    state.anteEnabled = t.anteEnabled!==false;
+    pauseTimer();
+    document.getElementById('tournamentTitle').textContent = t.name;
+    document.getElementById('p_useAnte').checked = state.anteEnabled;
+    closeTemplateMenu();
+    renderStructureTable();
+    renderClock();
+    renderTemplateMenu();
+    scheduleAutoSync();
+    showToast('"'+t.name+'" 템플릿으로 전환했습니다.');
+  }
+  function addNewTemplate(){
+    const name = prompt('새 템플릿 이름을 입력하세요', '새 토너먼트 템플릿 ' + nextTemplateId);
+    if(!name) return;
+    persistActiveTemplate();
+    const t = { id: nextTemplateId++, name, structure: JSON.parse(JSON.stringify(structure)), anteEnabled: state.anteEnabled };
+    templates.push(t);
+    switchTemplate(t.id);
+    showToast('템플릿 "'+name+'" 을(를) 추가했습니다.');
+  }
+  function renameTemplate(id){
+    const t = templates.find(t=>t.id===id);
+    if(!t) return;
+    const name = prompt('템플릿 이름 변경', t.name);
+    if(!name) return;
+    t.name = name;
+    if(id===activeTemplateId) document.getElementById('tournamentTitle').textContent = name;
+    renderTemplateMenu();
+    scheduleAutoSync();
+  }
+  function deleteTemplate(id){
+    if(templates.length<=1){ showToast('최소 1개의 템플릿은 남아 있어야 합니다.'); return; }
+    const idx = templates.findIndex(t=>t.id===id);
+    if(idx===-1) return;
+    const t = templates[idx];
+    if(!confirm('"'+t.name+'" 템플릿을 삭제하시겠습니까?\n삭제하면 되돌릴 수 없습니다.')) return;
+    const wasActive = id===activeTemplateId;
+    templates.splice(idx,1);
+    if(wasActive){ switchTemplate(templates[0].id); }
+    else{ renderTemplateMenu(); scheduleAutoSync(); }
+    showToast('"'+t.name+'" 템플릿을 삭제했습니다.');
+  }
+  function renderTemplateMenu(){
+    const list = document.getElementById('templateMenuList');
+    list.innerHTML = '';
+    templates.forEach(t=>{
+      const row = document.createElement('div');
+      row.className = 'template-menu-item' + (t.id===activeTemplateId ? ' active' : '');
+      row.innerHTML =
+        '<span class="tmpl-name">'+t.name+'</span>'+
+        '<span class="tmpl-actions">'+
+          '<button class="ren" title="이름 변경">✎</button>'+
+          (templates.length>1 ? '<button class="del" title="삭제">🗑</button>' : '')+
+        '</span>';
+      row.addEventListener('click', ()=> switchTemplate(t.id));
+      row.querySelector('.ren').addEventListener('click', (e)=>{ e.stopPropagation(); renameTemplate(t.id); });
+      const delBtn = row.querySelector('.del');
+      if(delBtn) delBtn.addEventListener('click', (e)=>{ e.stopPropagation(); deleteTemplate(t.id); });
+      list.appendChild(row);
+    });
+  }
+  function toggleTemplateMenu(force){
+    const menu = document.getElementById('templateMenu');
+    const show = force!==undefined ? force : menu.hidden;
+    menu.hidden = !show;
+  }
+  function closeTemplateMenu(){ document.getElementById('templateMenu').hidden = true; }
+
+  /* ---------------- 구글시트 DB 연동 (Google Apps Script 웹 앱) ---------------- */
+  // 새로고침하면 dbUrl/dbPassword는 초기화된다(localStorage 미사용) — 다시 입력하면 재연결된다.
+  // 실시간 동기화 대상은 "블라인드 구조"뿐이다: templates(각 템플릿의 레벨/휴식/안테)와
+  // activeTemplateId/nextTemplateId만 저장한다. 진행 중인 타이머(경과/남은 시간, 재생 여부)는
+  // 저장하지 않고, 불러올 때는 항상 첫 레벨/0초로 초기화한다.
+  let dbUrl = '';
+  let dbPassword = '';
+  let dbConnected = false;
+  let dbConnecting = false;
+  let dbAutoConnectTimer = null;
+  let dbSyncTimer = null;
+  let dbSyncInFlight = false;
+
+  function setDbStatus(text, kind){
+    const el = document.getElementById('dbStatus');
+    el.textContent = text;
+    el.className = 'db-status' + (kind ? ' '+kind : '');
+  }
+  function updateLastSaved(ts, label){
+    const el = document.getElementById('lastSavedIndicator');
+    const when = ts ? new Date(ts).toLocaleTimeString() : new Date().toLocaleTimeString();
+    el.textContent = (label||'최종 저장') + ' ' + when;
+  }
+  async function dbFetchGet(action, extra){
+    const params = new URLSearchParams(Object.assign({ action, password: dbPassword }, extra||{}));
+    const res = await fetch(dbUrl + (dbUrl.includes('?') ? '&' : '?') + params.toString());
+    return res.json();
+  }
+  async function dbFetchPost(action, payload){
+    const res = await fetch(dbUrl, {
+      method:'POST',
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' }, // Apps Script CORS 프리플라이트 회피
+      body: JSON.stringify(Object.assign({ action, password: dbPassword }, payload||{}))
+    });
+    return res.json();
+  }
+  function buildDbPayload(){
+    persistActiveTemplate();
+    return { templates: JSON.parse(JSON.stringify(templates)), activeTemplateId, nextTemplateId, theme: currentTheme, layout: currentLayout };
+  }
+  function applyLoadedTemplates(data){
+    if(!data || !Array.isArray(data.templates) || data.templates.length===0) return;
+    templates = data.templates;
+    activeTemplateId = templates.some(t=>t.id===data.activeTemplateId) ? data.activeTemplateId : templates[0].id;
+    nextTemplateId = data.nextTemplateId || (1 + templates.reduce((m,t)=>Math.max(m, t.id||0), 0));
+    const t = templates.find(t=>t.id===activeTemplateId);
+    structure = JSON.parse(JSON.stringify(t.structure));
+    state.anteEnabled = t.anteEnabled!==false;
+    // 타이머 진행 상태는 저장 대상이 아니므로 항상 초기화한다.
+    state.currentIndex = 0;
+    state.remainingSec = structure[0].minutes*60;
+    pauseTimer();
+    document.getElementById('tournamentTitle').textContent = t.name;
+    document.getElementById('p_useAnte').checked = state.anteEnabled;
+    // 마지막으로 저장된 테마(라이트/다크/퍼플/블루)와 레이아웃(1/2)도 함께 불러와 적용한다.
+    if(data.theme) setTheme(data.theme);
+    if(data.layout) setLayout(data.layout);
+    renderStructureTable();
+    renderClock();
+    renderTemplateMenu();
+  }
+  function scheduleAutoSync(){
+    if(!dbConnected) return;
+    clearTimeout(dbSyncTimer);
+    dbSyncTimer = setTimeout(doAutoSync, 900);
+  }
+  async function doAutoSync(){
+    if(!dbConnected || dbSyncInFlight) return;
+    dbSyncInFlight = true;
+    try{
+      const json = await dbFetchPost('saveLatest', { data: buildDbPayload() });
+      if(json.ok){ setDbStatus('✓ 실시간 동기화됨 · '+new Date().toLocaleTimeString(), 'ok'); updateLastSaved(json.updatedAt, '실시간 저장됨'); }
+      else setDbStatus('동기화 실패: '+(json.error||'오류'), 'bad');
+    }catch(err){
+      setDbStatus('동기화 오류: '+err.message, 'bad');
+    }finally{
+      dbSyncInFlight = false;
+    }
+  }
+
+  /* ---------------- Helpers ---------------- */
+  function fmtChip(n){
+    if(n===0 || n===undefined || n===null) return '-';
+    return n.toLocaleString('ko-KR');
+  }
+  function fmtClock(totalSec){
+    totalSec = Math.max(0, Math.round(totalSec));
+    const m = Math.floor(totalSec/60);
+    const s = totalSec%60;
+    return (m<10?'0'+m:m) + ':' + (s<10?'0'+s:s);
+  }
+  function fmtHMS(totalSec){
+    totalSec = Math.max(0, Math.round(totalSec));
+    const h = Math.floor(totalSec/3600);
+    const m = Math.floor((totalSec%3600)/60);
+    const s = totalSec%60;
+    return h+':'+(m<10?'0'+m:m)+':'+(s<10?'0'+s:s);
+  }
+  function cumulativeMinutesBefore(index){
+    let total = 0;
+    for(let i=0;i<index;i++) total += structure[i].minutes;
+    return total;
+  }
+  // 괄호 안 시간 표기용: 해당 레벨/휴식이 "끝나는" 시점까지의 누적 시간(자기 자신의 시간 포함)
+  function cumulativeMinutesThrough(index){
+    let total = 0;
+    for(let i=0;i<=index;i++) total += structure[i].minutes;
+    return total;
+  }
+  function totalRemainingSeconds(){
+    let sec = state.remainingSec;
+    for(let i=state.currentIndex+1;i<structure.length;i++) sec += structure[i].minutes*60;
+    return sec;
+  }
+  // 누적시간은 별도로 계속 더해나가는 값이 아니라, "지금 위치(현재 레벨/휴식 + 그 안에서 남은 시간)"로부터
+  // 매번 다시 계산한다. 이렇게 하면 재생/일시정지뿐 아니라 이전·다음 레벨 버튼이나 진행바를 직접 눌러
+  // 위치를 옮겼을 때도(앞으로건 뒤로건) 누적시간이 항상 실제 위치와 정확히 맞물려 표시된다.
+  function computeElapsedSec(){
+    const cur = structure[state.currentIndex];
+    const beforeSec = cumulativeMinutesBefore(state.currentIndex)*60;
+    const withinSec = cur.minutes*60 - state.remainingSec;
+    return beforeSec + withinSec;
+  }
+  function currentLevelObj(){
+    // find the most recent 'level' at or before currentIndex
+    for(let i=state.currentIndex;i>=0;i--){
+      if(structure[i].type==='level') return structure[i];
+    }
+    return structure.find(s=>s.type==='level') || lvl(7,100,200,0);
+  }
+  function currentLevelNumber(){
+    let n = 0;
+    for(let i=0;i<=state.currentIndex;i++){
+      if(structure[i].type==='level') n++;
+    }
+    return n || 1;
+  }
+  function beep(){
+    if(state.muted) return;
+    try{
+      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type='sine'; o.frequency.value=880;
+      g.gain.setValueAtTime(0.15, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.6);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(); o.stop(ctx.currentTime+0.6);
+    }catch(e){}
+  }
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(showToast._h);
+    showToast._h = setTimeout(()=>t.classList.remove('show'), 3500);
+  }
+
+  /* ---------------- Rendering: Clock view ---------------- */
+  function renderClock(){
+    const cur = structure[state.currentIndex];
+    const isBreak = cur.type==='break';
+    const lv = currentLevelObj();
+
+    // 왼쪽: 진행된 시간 / 오른쪽: 남은 시간(블라인드 구조 전체 시간 - 진행된 시간)
+    document.getElementById('elapsedTotal').textContent = fmtHMS(computeElapsedSec());
+    document.getElementById('remainingTotal').textContent = fmtHMS(totalRemainingSeconds());
+
+    const timerEl = document.getElementById('bigTimer');
+    timerEl.textContent = fmtClock(state.remainingSec);
+    timerEl.classList.toggle('warn', !isBreak && state.remainingSec<=10);
+
+    const total = cur.minutes*60;
+    const pct = total>0 ? Math.max(0, Math.min(100, 100*(1-state.remainingSec/total))) : 0;
+    document.getElementById('progressFill').style.width = pct+'%';
+    document.getElementById('progressDot').style.left = pct+'%';
+
+    document.getElementById('sbVal').textContent = isBreak ? '' : fmtChip(lv.sb);
+    document.getElementById('bbVal').textContent = isBreak ? '' : fmtChip(lv.bb);
+    document.getElementById('anteVal').textContent = (isBreak || !lv.ante || !state.anteEnabled) ? '-' : fmtChip(lv.ante);
+    // 휴식 중에는 "휴식 중" 대신 해당 휴식에 입력해둔 텍스트(예: "브레이크 1 (100,500 칩 제거)")를 그대로 보여준다.
+    if(isBreak) document.getElementById('breakVal').textContent = cur.label || '휴식 중';
+
+    // 휴식 중에는 SB/BB/Ante 3칸을 하나로 합쳐 휴식 텍스트만 표기.
+    // 평상시에는 BB Ante 사용 여부(state.anteEnabled)에 따라 Ante 칸을 보이거나 숨긴다
+    // (숨겨지면 SB/BB 두 칸이 flex로 남은 높이를 반반 나눠 채운다).
+    document.getElementById('sbBox').style.display = isBreak ? 'none' : 'flex';
+    document.getElementById('bbBox').style.display = isBreak ? 'none' : 'flex';
+    document.getElementById('anteBox').style.display = (isBreak || !state.anteEnabled) ? 'none' : 'flex';
+    document.getElementById('breakBox').style.display = isBreak ? 'flex' : 'none';
+
+    document.getElementById('playBtn').textContent = state.running ? '❙❙' : '▶';
+    document.getElementById('muteBtn').textContent = state.muted ? '🔇' : '🔊';
+    document.getElementById('muteBtn').classList.toggle('muted', state.muted);
+
+    renderPreviewRows();
+  }
+
+  /* ---------------- 블라인드 구조 미리보기 (다음 레벨 포함, 높이에 맞춰 개수 자동 조절) ---------------- */
+  function buildPreviewRowEl(i){
+    const s = structure[i];
+    const row = document.createElement('div');
+    // 해당 레벨/휴식 자체의 진행 시간(분)만 괄호로 표기한다.
+    const ownTime = '(' + s.minutes + '분)';
+    const isCurrent = i===state.currentIndex;
+    const isNext = i===state.currentIndex+1;
+    const tag = isNext ? '<span class="row-tag next-tag">다음 레벨</span>' : (isCurrent ? '<span class="row-tag cur-tag">현재 레벨</span>' : '');
+    if(s.type==='break'){
+      // 브레이크 카드는 아이콘/시간/내용을 한 줄로 표기한다. 뱃지는 시간 옆에 붙인다.
+      row.className = 'preview-row break-row' + (isCurrent?' current':'') + (isNext?' next':'');
+      row.innerHTML =
+        '<div class="prow-top break-line"><span class="lvl">☕</span><span class="prow-time">'+ownTime+'</span>'+tag+'<span class="bl">'+s.label+'</span></div>';
+    } else {
+      let count=0; for(let k=0;k<=i;k++) if(structure[k].type==='level') count++;
+      row.className = 'preview-row' + (isCurrent?' current':'') + (isNext?' next':'');
+      // 왼쪽에 레벨+시간(+뱃지)을 나란히 묶어 두고, 같은 줄 오른쪽에 블라인드 금액을 배치한다(세로 중앙 정렬).
+      row.innerHTML =
+        '<div class="prow-inner"><div class="prow-left"><span class="lvl">'+count+'</span><span class="prow-time">'+ownTime+'</span>'+tag+'</div>'+
+        '<div class="bl">'+fmtChip(s.sb)+' / '+fmtChip(s.bb)+' <span class="ante">'+((s.ante && state.anteEnabled)?('('+fmtChip(s.ante)+')'):'')+'</span></div></div>';
+    }
+    return row;
+  }
+  let previewRowCount = 6;
+  function computePreviewRowCount(){
+    const wrap = document.getElementById('previewRows');
+    if(!wrap || structure.length===0 || wrap.clientHeight===0) return;
+    wrap.innerHTML='';
+    const sample = buildPreviewRowEl(state.currentIndex);
+    wrap.appendChild(sample);
+    const rowH = sample.getBoundingClientRect().height || 60;
+    const gap = 8;
+    const availH = wrap.clientHeight;
+    previewRowCount = Math.max(1, Math.floor((availH + gap) / (rowH + gap)));
+  }
+  function renderPreviewRows(){
+    // 레벨마다 금액 자릿수(줄바꿈 여부)가 달라 줄 높이가 들쭉날쭉할 수 있으므로,
+    // 리사이즈/레이아웃 변경 때만이 아니라 매번(레벨 이동 포함) 다시 계산해 몇 줄이 들어갈지 갱신한다.
+    computePreviewRowCount();
+    const wrap = document.getElementById('previewRows');
+    if(!wrap) return;
+    wrap.innerHTML='';
+    const start = state.currentIndex;
+    const count = Math.max(1, Math.min(previewRowCount, structure.length-start));
+    for(let k=0;k<count;k++) wrap.appendChild(buildPreviewRowEl(start+k));
+  }
+
+  /* ---------------- Timer engine ---------------- */
+  // setInterval(…,1000)만 믿고 "매번 정확히 1초씩" 흘렀다고 가정하면, 화면이 꺼지거나 탭이
+  // 백그라운드로 밀려 브라우저가 타이머를 스로틀링(지연/합쳐서 실행)할 때 실제로 흐른 시간만큼
+  // 누적/카운트다운이 못 따라가는 문제가 생긴다(특히 폰 미러링 환경에서 발생하기 쉬움).
+  // 그래서 매 tick마다 "실제로 몇 초가 지났는지"(Date.now() 차이)를 직접 계산해 그만큼만 반영한다.
+  // 일시정지 중에는 lastTickAt을 비워 두므로, 정지해 있던 실제 시간은 절대 누적되지 않는다
+  // (요청하신 대로 "실제 시간"이 아니라 "타이머가 실제로 동작한 시간"만 누적된다).
+  let lastTickAt = null;
+  function tick(){
+    if(!state.running) return;
+    const now = Date.now();
+    let deltaSec = lastTickAt==null ? 1 : (now - lastTickAt)/1000;
+    lastTickAt = now;
+    if(deltaSec <= 0) return;
+    // 스로틀링으로 한 번에 여러 레벨 분량의 시간이 몰려 지나갔을 수도 있으므로, 실제로 흐른
+    // 시간(deltaSec)을 레벨 경계에서 정확히 나눠 소비한다. 토너먼트가 끝난 뒤 남는 시간은
+    // (타이머가 더 이상 동작 중이 아니므로) 누적시간에 더하지 않는다.
+    let guard = 0;
+    while(deltaSec > 0 && state.running && guard < 1000){
+      guard++;
+      if(state.remainingSec > deltaSec){
+        state.remainingSec -= deltaSec;
+        deltaSec = 0;
+      } else {
+        const used = state.remainingSec;
+        deltaSec -= used;
+        state.remainingSec = 0;
+        if(state.currentIndex < structure.length-1){
+          state.currentIndex += 1;
+          state.remainingSec = structure[state.currentIndex].minutes*60;
+          beep();
+        } else {
+          state.running = false;
+          state.remainingSec = 0;
+          pauseTimer();
+          showToast('토너먼트 구조가 모두 종료되었습니다.');
+        }
+      }
+    }
+    renderClock();
+  }
+  function advanceLevel(auto){
+    if(state.currentIndex < structure.length-1){
+      state.currentIndex += 1;
+      state.remainingSec = structure[state.currentIndex].minutes*60;
+      if(auto) beep();
+    } else {
+      state.running = false;
+      pauseTimer();
+      showToast('토너먼트 구조가 모두 종료되었습니다.');
+    }
+  }
+  function prevLevel(){
+    if(state.currentIndex>0){
+      state.currentIndex -= 1;
+      state.remainingSec = structure[state.currentIndex].minutes*60;
+      renderClock();
+    }
+  }
+  function startTimer(){
+    state.running = true;
+    lastTickAt = Date.now();
+    if(timerHandle) clearInterval(timerHandle);
+    timerHandle = setInterval(tick, 1000);
+    renderClock();
+  }
+  function pauseTimer(){
+    state.running = false;
+    lastTickAt = null;
+    if(timerHandle) clearInterval(timerHandle);
+    timerHandle = null;
+    renderClock();
+  }
+  // 화면이 꺼졌다 켜지거나 탭이 다시 보이게 될 때(특히 폰 미러링 중) 그동안 실제로 흐른 시간을
+  // 즉시 반영해, 다음 setInterval 틱까지 기다리지 않고 바로 따라잡게 한다.
+  document.addEventListener('visibilitychange', ()=>{
+    if(!document.hidden && state.running) tick();
+  });
+
+  /* ---------------- Rendering: Structure view ---------------- */
+  function renderStructureTable(){
+    const anteTh = document.getElementById('anteTh');
+    if(anteTh) anteTh.style.display = state.anteEnabled ? '' : 'none';
+    const breakColspan = state.anteEnabled ? 3 : 2;
+    const tbody = document.getElementById('structureTbody');
+    tbody.innerHTML = '';
+    let levelCount = 0;
+    structure.forEach((s, i)=>{
+      const tr = document.createElement('tr');
+      const cum = cumulativeMinutesThrough(i);
+      const timeStr = fmtHMS(cum*60).replace(/^(\d):/,'$1:').split(':').slice(0,2).join(':');
+      if(s.type==='level'){
+        levelCount++;
+        tr.className = 'level-row' + (i===state.currentIndex?' current-row':'');
+        tr.innerHTML =
+          '<td class="row-idx">'+levelCount+'</td>'+
+          '<td>'+s.minutes+' ('+timeStr+')</td>'+
+          '<td>'+fmtChip(s.sb)+'</td>'+
+          '<td>'+fmtChip(s.bb)+'</td>'+
+          '<td class="ante-cell" style="'+(state.anteEnabled?'':'display:none;')+'">'+(s.ante ? fmtChip(s.ante) : '-')+'</td>'+
+          '<td class="row-actions"><button class="edit" data-i="'+i+'" title="수정">✎</button><button class="del" data-i="'+i+'" title="삭제">🗑</button></td>';
+      } else {
+        tr.className = 'break-row';
+        tr.innerHTML =
+          '<td></td>'+
+          '<td>'+s.minutes+' ('+timeStr+')</td>'+
+          '<td colspan="'+breakColspan+'">'+s.label+'</td>'+
+          '<td class="row-actions"><button class="edit" data-i="'+i+'" title="수정">✎</button><button class="del" data-i="'+i+'" title="삭제">🗑</button></td>';
+      }
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('button.edit').forEach(b=>b.addEventListener('click', ()=>editRow(parseInt(b.dataset.i))));
+    tbody.querySelectorAll('button.del').forEach(b=>b.addEventListener('click', ()=>deleteRow(parseInt(b.dataset.i))));
+  }
+
+  function editRow(i){
+    const s = structure[i];
+    const tr = document.querySelectorAll('#structureTbody tr')[i];
+    const breakColspan = state.anteEnabled ? 3 : 2;
+    if(s.type==='level'){
+      tr.innerHTML =
+        '<td class="row-idx">•</td>'+
+        '<td><input type="number" value="'+s.minutes+'" data-f="minutes" style="width:56px"/></td>'+
+        '<td><input type="number" value="'+s.sb+'" data-f="sb"/></td>'+
+        '<td><input type="number" value="'+s.bb+'" data-f="bb"/></td>'+
+        '<td class="ante-cell" style="'+(state.anteEnabled?'':'display:none;')+'"><input type="number" value="'+s.ante+'" data-f="ante"/></td>'+
+        '<td class="row-actions"><button class="save">✔</button><button class="del">✕</button></td>';
+    } else {
+      tr.innerHTML =
+        '<td></td>'+
+        '<td><input type="number" value="'+s.minutes+'" data-f="minutes" style="width:56px"/></td>'+
+        '<td colspan="'+breakColspan+'"><input type="text" class="wide" value="'+s.label+'" data-f="label"/></td>'+
+        '<td class="row-actions"><button class="save">✔</button><button class="del">✕</button></td>';
+    }
+    tr.querySelector('.save').addEventListener('click', ()=>{
+      tr.querySelectorAll('input').forEach(inp=>{
+        const f = inp.dataset.f;
+        s[f] = (f==='label') ? inp.value : Number(inp.value)||0;
+      });
+      renderStructureTable();
+      renderClock();
+      scheduleAutoSync();
+      showToast('레벨 정보를 수정했습니다.');
+    });
+    tr.querySelector('.del').addEventListener('click', renderStructureTable);
+  }
+
+  function deleteRow(i){
+    structure.splice(i,1);
+    if(state.currentIndex>=structure.length) state.currentIndex = structure.length-1;
+    if(state.currentIndex<0){ state.currentIndex=0; structure.push(lvl(7,100,200,0)); }
+    state.remainingSec = structure[state.currentIndex].minutes*60;
+    renderStructureTable();
+    renderClock();
+    scheduleAutoSync();
+    showToast('항목을 삭제했습니다.');
+  }
+
+  function addLevel(){
+    const lastLevel = [...structure].reverse().find(s=>s.type==='level') || lvl(7,100,200,0);
+    const newBb = lastLevel.bb*2;
+    const newSb = Math.round(newBb/2/100)*100;
+    const newAnte = lastLevel.ante ? newBb : 0;
+    structure.push(lvl(lastLevel.minutes||7, newSb, newBb, newAnte));
+    renderStructureTable();
+    renderClock();
+    scheduleAutoSync();
+    showToast('새 레벨을 추가했습니다.');
+  }
+  function addBreak(){
+    structure.push(brk(10, '휴식 ' + (structure.filter(s=>s.type==='break').length+1)));
+    renderStructureTable();
+    renderClock();
+    scheduleAutoSync();
+    showToast('휴식을 추가했습니다.');
+  }
+
+  /* ---------------- Events ---------------- */
+  function switchView(viewId){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    const toggleBtn = document.getElementById('viewToggleBtn');
+    if(viewId==='clockView'){
+      toggleBtn.textContent = '📊';
+      toggleBtn.title = '블라인드 구조 편집 화면으로 전환';
+      computePreviewRowCount();
+      renderClock();
+    } else {
+      toggleBtn.textContent = '⏱';
+      toggleBtn.title = '시계 화면으로 전환';
+    }
+  }
+  document.getElementById('viewToggleBtn').addEventListener('click', ()=>{
+    const onClock = document.getElementById('clockView').classList.contains('active');
+    switchView(onClock ? 'structureView' : 'clockView');
+  });
+
+  document.getElementById('playBtn').addEventListener('click', ()=>{
+    state.running ? pauseTimer() : startTimer();
+  });
+  document.getElementById('prevBtn').addEventListener('click', ()=>{ prevLevel(); });
+  document.getElementById('nextBtn').addEventListener('click', ()=>{ advanceLevel(false); renderClock(); });
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    // 현재 레벨만 초기화하는 것이 아니라 토너먼트를 맨 처음(1번째 레벨)으로 완전히 되돌린다.
+    pauseTimer();
+    state.currentIndex = 0;
+    state.remainingSec = structure[0].minutes*60;
+    renderClock();
+  });
+  document.getElementById('muteBtn').addEventListener('click', ()=>{
+    state.muted = !state.muted; renderClock();
+  });
+  function toggleFullscreenMode(){
+    document.body.classList.toggle('fs-mode');
+    // <html>에도 같은 클래스를 둬서, 브라우저 전체화면 진입 시 vh 계산이 미세하게 달라져
+    // 세로 스크롤이 생기는 것(특히 좁은 모바일 레이아웃3)을 확실히 막는다.
+    document.documentElement.classList.toggle('fs-mode', document.body.classList.contains('fs-mode'));
+    if(document.body.classList.contains('fs-mode') && document.documentElement.requestFullscreen){
+      document.documentElement.requestFullscreen().catch(()=>{});
+    } else if(document.exitFullscreen && document.fullscreenElement){
+      document.exitFullscreen().catch(()=>{});
+    }
+    // 전체화면 전환 시 레이아웃 높이가 바뀌므로 블라인드 구조 줄 수를 다시 계산한다.
+    setTimeout(()=>{
+      if(document.getElementById('clockView').classList.contains('active')){
+        computePreviewRowCount();
+        renderClock();
+      }
+    }, 120);
+  }
+  document.getElementById('fsBtn').addEventListener('click', toggleFullscreenMode);
+  document.getElementById('fsExitBtn').addEventListener('click', toggleFullscreenMode);
+  // Esc 등으로 브라우저 전체화면이 꺼졌는데 fs-mode만 남아있는 상태를 방지
+  document.addEventListener('fullscreenchange', ()=>{
+    if(!document.fullscreenElement && document.body.classList.contains('fs-mode')){
+      document.body.classList.remove('fs-mode');
+      document.documentElement.classList.remove('fs-mode');
+      setTimeout(()=>{
+        if(document.getElementById('clockView').classList.contains('active')){
+          computePreviewRowCount();
+          renderClock();
+        }
+      }, 120);
+    }
+  });
+  // 탭/클릭 한 번으로 점프하는 것뿐 아니라, 눌러서 손가락/마우스를 좌우로 움직이며 위치를
+  // 계속 옮길 수 있게 한다(포인터 이벤트라 마우스·터치 공통으로 동작한다).
+  (function initProgressDrag(){
+    const track = document.getElementById('progressTrack');
+    let dragging = false;
+    function seekTo(clientX){
+      const rect = track.getBoundingClientRect();
+      const pct = Math.max(0, Math.min(1, (clientX-rect.left)/rect.width));
+      const cur = structure[state.currentIndex];
+      state.remainingSec = Math.round(cur.minutes*60*(1-pct));
+      renderClock();
+    }
+    track.addEventListener('pointerdown', (e)=>{
+      e.preventDefault();
+      dragging = true;
+      track.setPointerCapture(e.pointerId);
+      seekTo(e.clientX);
+    });
+    track.addEventListener('pointermove', (e)=>{
+      if(!dragging) return;
+      seekTo(e.clientX);
+    });
+    function endDrag(e){
+      if(!dragging) return;
+      dragging = false;
+      try{ track.releasePointerCapture(e.pointerId); }catch(err){}
+    }
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+  })();
+
+  document.getElementById('addLevelBtn').addEventListener('click', addLevel);
+  document.getElementById('addBreakBtn').addEventListener('click', addBreak);
+
+  document.getElementById('p_useAnte').addEventListener('change', (e)=>{
+    state.anteEnabled = e.target.checked;
+    persistActiveTemplate();
+    renderStructureTable();
+    renderClock();
+    scheduleAutoSync();
+  });
+
+  /* ---------------- 템플릿(여러 토너먼트) 선택 드롭다운 ---------------- */
+  document.getElementById('templateBtn').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    renderTemplateMenu();
+    toggleTemplateMenu();
+  });
+  document.getElementById('addTemplateBtn').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    addNewTemplate();
+  });
+  document.addEventListener('click', (e)=>{
+    const menu = document.getElementById('templateMenu');
+    const btn = document.getElementById('templateBtn');
+    if(!menu.hidden && !menu.contains(e.target) && !btn.contains(e.target)) closeTemplateMenu();
+  });
+
+  /* ---------------- 더보기 메뉴 / DB연결 팝업 ---------------- */
+  document.getElementById('moreMenuBtn').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const menu = document.getElementById('moreMenu');
+    menu.hidden = !menu.hidden;
+  });
+  document.addEventListener('click', (e)=>{
+    const menu = document.getElementById('moreMenu');
+    const btn = document.getElementById('moreMenuBtn');
+    if(!menu.hidden && !menu.contains(e.target) && !btn.contains(e.target)) menu.hidden = true;
+  });
+  let currentTheme = 'light';
+  function setTheme(theme){
+    currentTheme = theme || 'light';
+    document.body.classList.remove('theme-dark','theme-purple','theme-blue','theme-rainbow');
+    if(currentTheme!=='light') document.body.classList.add('theme-'+currentTheme);
+    document.querySelectorAll('.theme-item').forEach(btn=>{
+      btn.classList.toggle('active', btn.dataset.theme===currentTheme);
+    });
+  }
+  document.querySelectorAll('.theme-item').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      setTheme(btn.dataset.theme);
+      document.getElementById('moreMenu').hidden = true;
+      // 테마도 블라인드 구조와 함께 DB에 저장해, 다음에 불러올 때 마지막으로 쓰던 테마가 그대로 적용되게 한다.
+      scheduleAutoSync();
+    });
+  });
+  setTheme('light');
+
+  /* ---------------- 레이아웃 선택 (레이아웃1: 시계/블라인드값 좌우 배치, 레이아웃2: 시계 위·블라인드값 아래 가로 배치) ---------------- */
+  let currentLayout = '1';
+  function setLayout(layout){
+    currentLayout = (layout==='2' || layout==='3') ? layout : '1';
+    document.body.classList.toggle('layout-2', currentLayout==='2');
+    document.body.classList.toggle('layout-3', currentLayout==='3');
+    document.querySelectorAll('.layout-item').forEach(btn=>{
+      btn.classList.toggle('active', btn.dataset.layout===currentLayout);
+    });
+    // 레이아웃 변경으로 영역 크기가 바뀌므로 블라인드 구조 줄 수를 다시 계산한다.
+    computePreviewRowCount();
+    renderPreviewRows();
+  }
+  document.querySelectorAll('.layout-item').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      setLayout(btn.dataset.layout);
+      document.getElementById('moreMenu').hidden = true;
+      // 레이아웃도 테마와 마찬가지로 DB에 저장해, 다음에 불러올 때 마지막으로 쓰던 레이아웃이 그대로 적용되게 한다.
+      scheduleAutoSync();
+    });
+  });
+  setLayout('1');
+
+  function openDbModal(){
+    document.getElementById('moreMenu').hidden = true;
+    document.getElementById('dbModalBackdrop').classList.add('show');
+    document.getElementById('dbModal').classList.add('show');
+    scheduleAutoConnect();
+  }
+  function closeDbModal(){
+    document.getElementById('dbModalBackdrop').classList.remove('show');
+    document.getElementById('dbModal').classList.remove('show');
+  }
+  document.getElementById('openDbModalBtn').addEventListener('click', openDbModal);
+  document.getElementById('dbModalClose').addEventListener('click', closeDbModal);
+  document.getElementById('dbModalBackdrop').addEventListener('click', closeDbModal);
+
+  // 현재 페이지를 그대로(현재 DB 연동 URL/비밀번호 포함) 독립 실행 가능한 HTML 파일로 다운로드한다.
+  function downloadHtmlSnapshot(){
+    const clone = document.documentElement.cloneNode(true);
+    // 열려 있던 팝업/메뉴 상태는 지우고 깨끗한 초기 화면으로 저장한다.
+    const moreMenu = clone.querySelector('#moreMenu'); if(moreMenu) moreMenu.setAttribute('hidden','');
+    const templateMenu = clone.querySelector('#templateMenu'); if(templateMenu) templateMenu.setAttribute('hidden','');
+    const dbBackdrop = clone.querySelector('#dbModalBackdrop'); if(dbBackdrop) dbBackdrop.classList.remove('show');
+    const dbModalEl = clone.querySelector('#dbModal'); if(dbModalEl) dbModalEl.classList.remove('show');
+
+    // 지금 연결돼 있는 DB 연동 URL/비밀번호가 있으면 그대로 심어서, 파일을 열었을 때 자동으로 다시 연결되게 한다.
+    if(dbUrl){
+      const bootScript = document.createElement('script');
+      bootScript.textContent =
+        'document.getElementById("dbUrl").value = ' + JSON.stringify(dbUrl) + ';\n' +
+        'document.getElementById("dbPassword").value = ' + JSON.stringify(dbPassword) + ';\n' +
+        'document.getElementById("dbUrl").dispatchEvent(new Event("input", {bubbles:true}));\n' +
+        'document.getElementById("dbPassword").dispatchEvent(new Event("input", {bubbles:true}));\n';
+      clone.querySelector('body').appendChild(bootScript);
+    }
+
+    const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '포커토너먼트클락.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    document.getElementById('moreMenu').hidden = true;
+    showToast('HTML 파일을 다운로드했습니다.');
+  }
+  document.getElementById('downloadHtmlBtn').addEventListener('click', downloadHtmlSnapshot);
+
+  document.getElementById('dbUrl').addEventListener('input', e=>{ dbUrl = e.target.value.trim(); scheduleAutoConnect(); });
+  document.getElementById('dbPassword').addEventListener('input', e=>{ dbPassword = e.target.value; scheduleAutoConnect(); });
+
+  function scheduleAutoConnect(){
+    clearTimeout(dbAutoConnectTimer);
+    dbAutoConnectTimer = setTimeout(tryAutoConnect, 500);
+  }
+  async function tryAutoConnect(){
+    if(dbConnected || dbConnecting) return;
+    if(!dbUrl || !dbPassword) return; // 둘 다 채워지기 전에는 아무것도 하지 않는다
+    dbConnecting = true;
+    setDbStatus('연결하는 중...', 'loading');
+    try{
+      const json = await dbFetchGet('loadLatest');
+      if(!json.ok){ setDbStatus('연결 실패: '+(json.error||'비밀번호를 확인해주세요'), 'bad'); return; }
+      dbConnected = true;
+      if(json.updatedAt){
+        applyLoadedTemplates(json.data);
+        setDbStatus('✓ 연결됨 · 최신본을 불러왔습니다 ('+new Date(json.updatedAt).toLocaleString()+'). 이제부터 블라인드 구조를 수정하면 실시간으로 반영됩니다.', 'ok');
+        updateLastSaved(json.updatedAt, '최신본 불러옴');
+      } else {
+        setDbStatus('✓ 연결됨 · 시트에 저장된 최신본이 아직 없어 현재 화면 데이터를 유지합니다. 이제부터 수정하면 실시간으로 반영됩니다.', 'ok');
+      }
+      document.getElementById('dbDisconnectBtn').style.display = '';
+      document.getElementById('dbUrl').disabled = true;
+      document.getElementById('dbPassword').disabled = true;
+    }catch(err){
+      setDbStatus('연결 중 오류: '+err.message+' (URL·비밀번호·웹 앱 배포 설정을 확인해주세요)', 'bad');
+    }finally{
+      dbConnecting = false;
+    }
+  }
+  document.getElementById('dbDisconnectBtn').addEventListener('click', ()=>{
+    dbConnected = false;
+    clearTimeout(dbSyncTimer);
+    document.getElementById('dbDisconnectBtn').style.display = 'none';
+    document.getElementById('dbBackupPicker').classList.remove('show');
+    document.getElementById('dbUrl').disabled = false;
+    document.getElementById('dbPassword').disabled = false;
+    setDbStatus('연결이 해제됐습니다. 실시간 동기화가 중지됩니다.', '');
+  });
+
+  document.getElementById('dbSaveBtn').addEventListener('click', async ()=>{
+    if(!dbConnected){ setDbStatus('먼저 연동 URL과 비밀번호를 입력해 연결해주세요.', 'bad'); return; }
+    const name = prompt('백업 이름을 입력하세요 (예: 8월 정기전 구조)');
+    if(!name) return;
+    setDbStatus('백업 저장 중...', 'loading');
+    try{
+      const json = await dbFetchPost('saveBackup', { name, data: buildDbPayload() });
+      if(!json.ok){ setDbStatus('백업 저장 실패: '+(json.error||'오류'), 'bad'); return; }
+      const when = json.savedAt ? new Date(json.savedAt).toLocaleString() : '';
+      setDbStatus('✓ 백업 저장 완료: "'+name+'" ('+when+')', 'ok');
+      updateLastSaved(json.savedAt, '백업 "'+name+'" 저장됨');
+    }catch(err){
+      setDbStatus('백업 저장 중 오류: '+err.message, 'bad');
+    }
+  });
+
+  document.getElementById('dbLoadBtn').addEventListener('click', async ()=>{
+    if(!dbConnected){ setDbStatus('먼저 연동 URL과 비밀번호를 입력해 연결해주세요.', 'bad'); return; }
+    setDbStatus('백업 목록을 불러오는 중...', 'loading');
+    try{
+      const json = await dbFetchGet('listBackups');
+      if(!json.ok){ setDbStatus('백업 목록 불러오기 실패: '+(json.error||'오류'), 'bad'); return; }
+      const backups = json.backups || [];
+      const sel = document.getElementById('dbBackupSelect');
+      sel.innerHTML = '';
+      if(backups.length===0){
+        setDbStatus('저장된 백업이 아직 없습니다.', 'bad');
+        document.getElementById('dbBackupPicker').classList.remove('show');
+        return;
+      }
+      backups.slice().reverse().forEach(b=>{
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = b.name + ' · ' + (b.savedAt ? new Date(b.savedAt).toLocaleString() : '');
+        sel.appendChild(opt);
+      });
+      document.getElementById('dbBackupPicker').classList.add('show');
+      setDbStatus('백업 '+backups.length+'건을 찾았습니다. 목록에서 골라주세요.', '');
+    }catch(err){
+      setDbStatus('백업 목록 불러오기 오류: '+err.message, 'bad');
+    }
+  });
+
+  document.getElementById('dbLoadSelectedBtn').addEventListener('click', async ()=>{
+    const sel = document.getElementById('dbBackupSelect');
+    const id = sel.value;
+    if(!id) return;
+    if(!confirm('선택한 백업을 불러오면 현재 화면의 블라인드 구조를 덮어씁니다. 계속할까요?')) return;
+    setDbStatus('백업을 불러오는 중...', 'loading');
+    try{
+      const json = await dbFetchGet('loadBackup', { id });
+      if(!json.ok){ setDbStatus('백업 불러오기 실패: '+(json.error||'오류'), 'bad'); return; }
+      applyLoadedTemplates(json.data);
+      document.getElementById('dbBackupPicker').classList.remove('show');
+      const when = json.savedAt ? new Date(json.savedAt).toLocaleString() : '';
+      setDbStatus('✓ "'+json.name+'" 백업을 불러왔습니다 ('+when+')', 'ok');
+    }catch(err){
+      setDbStatus('백업 불러오기 오류: '+err.message, 'bad');
+    }
+  });
+
+  document.getElementById('dbDeleteBackupBtn').addEventListener('click', async ()=>{
+    const sel = document.getElementById('dbBackupSelect');
+    const id = sel.value;
+    if(!id) return;
+    const label = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].textContent : '';
+    if(!confirm('"'+label+'" 백업을 삭제할까요? 되돌릴 수 없습니다.')) return;
+    setDbStatus('백업 삭제 중...', 'loading');
+    try{
+      const json = await dbFetchPost('deleteBackup', { id });
+      if(!json.ok){ setDbStatus('백업 삭제 실패: '+(json.error||'오류'), 'bad'); return; }
+      const opt = sel.querySelector('option[value="'+id+'"]');
+      if(opt) opt.remove();
+      if(!sel.options.length){
+        document.getElementById('dbBackupPicker').classList.remove('show');
+        setDbStatus('✓ 백업을 삭제했습니다. 남은 백업이 없습니다.', 'ok');
+      } else {
+        setDbStatus('✓ 백업을 삭제했습니다.', 'ok');
+      }
+    }catch(err){
+      setDbStatus('백업 삭제 오류: '+err.message, 'bad');
+    }
+  });
+
+  document.getElementById('dbCancelLoadBtn').addEventListener('click', ()=>{
+    document.getElementById('dbBackupPicker').classList.remove('show');
+  });
+
+  /* ---------------- Init ---------------- */
+  renderStructureTable();
+  computePreviewRowCount();
+  renderClock();
+  renderTemplateMenu();
+
+  // 창 크기(해상도)가 바뀌면 블라인드 구조 미리보기에 몇 줄이 들어갈지 다시 계산한다.
+  let resizeDebounce = null;
+  window.addEventListener('resize', ()=>{
+    clearTimeout(resizeDebounce);
+    resizeDebounce = setTimeout(()=>{
+      if(document.getElementById('clockView').classList.contains('active')){
+        computePreviewRowCount();
+        renderClock();
+      }
+    }, 150);
+  });
+
+  /* ---------------- 컬럼 스플리터 (시계 / 블라인드값 / 블라인드구조 영역 너비 조절) ---------------- */
+  (function initColumnSplitters(){
+    const timerEl = document.querySelector('.clock-timer-row');
+    const blindsEl = document.querySelector('.clock-blinds-row');
+    const groupEl = document.querySelector('.clock-left-group'); // 시계+블라인드값을 감싸는 좌측 그룹
+    const lowerEl = document.querySelector('.clock-lower');
+    const splitter1 = document.getElementById('splitter1'); // 시계 / 블라인드값 사이 (그룹 내부, 레이아웃1에서만 동작)
+    const splitter2 = document.getElementById('splitter2'); // 좌측 그룹 / 블라인드구조 사이
+    if(!timerEl || !blindsEl || !groupEl || !lowerEl || !splitter1 || !splitter2) return;
+    const MIN_W = 160;
+
+    // fixedEl은 선택사항: 값이 있으면 드래그 중 픽셀 기준으로 폭을 고정해 다른 영역 비율이 틀어지지 않게 한다.
+    function startDrag(splitterEl, leftEl, rightEl, fixedEl, downEvent){
+      downEvent.preventDefault();
+      const startX = downEvent.clientX;
+      const wLeft0 = leftEl.getBoundingClientRect().width;
+      const wRight0 = rightEl.getBoundingClientRect().width;
+      const wFixed = fixedEl ? fixedEl.getBoundingClientRect().width : null;
+      const total = wLeft0 + wRight0;
+      splitterEl.classList.add('dragging');
+      document.body.classList.add('col-resizing');
+
+      function onMove(ev){
+        const delta = ev.clientX - startX;
+        let newLeft = wLeft0 + delta;
+        let newRight = total - newLeft;
+        if(newLeft < MIN_W){ newLeft = MIN_W; newRight = total - MIN_W; }
+        if(newRight < MIN_W){ newRight = MIN_W; newLeft = total - MIN_W; }
+        // 세 영역 모두 같은 px 기준 비율로 맞춰서 나머지 한 영역 비율이 틀어지지 않게 한다.
+        leftEl.style.flex = newLeft + ' 1 0';
+        rightEl.style.flex = newRight + ' 1 0';
+        if(fixedEl) fixedEl.style.flex = wFixed + ' 1 0';
+      }
+      function onUp(){
+        splitterEl.classList.remove('dragging');
+        document.body.classList.remove('col-resizing');
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+        computePreviewRowCount();
+        renderClock();
+      }
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    }
+
+    // 레이아웃1일 때만 시계/블라인드값 내부 분할이 의미가 있다 (레이아웃2/3은 세로로 쌓이므로 splitter1을 CSS에서 숨김).
+    splitter1.addEventListener('pointerdown', (e)=>{
+      if(document.body.classList.contains('layout-2') || document.body.classList.contains('layout-3')) return;
+      startDrag(splitter1, timerEl, blindsEl, null, e);
+    });
+    // 좌측 그룹 전체 폭 vs 블라인드구조 목록 폭 조절 (레이아웃1/2 공통).
+    splitter2.addEventListener('pointerdown', (e)=> startDrag(splitter2, groupEl, lowerEl, null, e));
+  })();
+})();
+</script>
+
+
+<script>document.getElementById("dbUrl").value = "/exec";
+document.getElementById("dbPassword").value = "";
+document.getElementById("dbUrl").dispatchEvent(new Event("input", {bubbles:true}));
+document.getElementById("dbPassword").dispatchEvent(new Event("input", {bubbles:true}));
+</script></body></html>
